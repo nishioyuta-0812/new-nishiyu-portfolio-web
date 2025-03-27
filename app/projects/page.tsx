@@ -1,4 +1,4 @@
-import { PageLayout } from '@/components/templates/PageLayout';
+import { PageLayout } from '@/components/template/PageLayout';
 import { ProjectCard } from '@/components/molecules/ProjectCard';
 import { ProjectsCallToAction } from '@/components/organisms/ProjectsCallToAction';
 

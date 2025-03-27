@@ -1,4 +1,4 @@
-import { PageLayout } from '@/components/templates/PageLayout';
+import { PageLayout } from '@/components/template/PageLayout';
 import { BlogCard } from '@/components/organisms/BlogCard';
 import { Button } from '@/components/ui/button';
 

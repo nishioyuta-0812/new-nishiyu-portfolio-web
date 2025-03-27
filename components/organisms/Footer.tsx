@@ -1,26 +1,23 @@
 import { Logo } from '@/components/atoms/Logo';
-import { Github, Linkedin, Mail, Twitter } from 'lucide-react';
 import Link from 'next/link';
+import { FaGithub } from "react-icons/fa";
+import { BsTwitterX } from "react-icons/bs";
+import { SiGmail } from "react-icons/si";
 
 const socialLinks = [
   {
-    icon: Github,
-    href: 'https://github.com',
+    icon: FaGithub,
+    href: 'https://github.com/nishioyuta-0812',
     label: 'GitHub',
   },
   {
-    icon: Twitter,
-    href: 'https://twitter.com',
-    label: 'Twitter',
+    icon: BsTwitterX,
+    href: 'https://x.com/yutakun_27',
+    label: 'X',
   },
   {
-    icon: Linkedin,
-    href: 'https://linkedin.com',
-    label: 'LinkedIn',
-  },
-  {
-    icon: Mail,
-    href: 'mailto:contact@example.com',
+    icon: SiGmail,
+    href: 'mailto:yutanishi0812@gmail.com',
     label: 'Email',
   },
 ];
@@ -54,7 +51,7 @@ export const Footer = () => {
         </div>
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-8 text-center text-sm text-muted-foreground">
-        <p>© {new Date().getFullYear()} Your Name. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Yuta Nishio. All rights reserved.</p>
       </div>
     </footer>
   );

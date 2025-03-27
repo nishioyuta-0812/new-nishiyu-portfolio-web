@@ -1,4 +1,4 @@
-import { PageLayout } from '@/components/templates/PageLayout';
+import { PageLayout } from '@/components/template/PageLayout';
 import { ContactForm } from '@/components/organisms/ContactForm';
 import { ContactInfo } from '@/components/organisms/ContactInfo';
 

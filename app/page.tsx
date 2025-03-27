@@ -20,14 +20,14 @@ export default function Home() {
         <div
           className="absolute inset-0 -z-10 h-screen bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1509023464722-18d996393ca8?q=80&w=2940")',
+            backgroundImage: 'url("/backgrounds/mikuyuta.JPG")',
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background/80" />
         </div>
         <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-primary/20 shadow-lg">
           <Image
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d"
+            src="/images/yutaicon.JPG"
             alt="Profile"
             fill
             className="object-cover"
@@ -35,7 +35,7 @@ export default function Home() {
           />
         </div>
         <div className="space-y-4">
-          <h1 className="font-jp text-4xl font-bold">山田 太郎</h1>
+          <h1 className="font-jp text-4xl font-bold">西尾 悠太</h1>
           <p className="text-2xl font-medium bg-gradient-to-r from-primary/80 to-accent/80 bg-clip-text text-transparent">
             Software Engineer
           </p>
@@ -64,7 +64,7 @@ export default function Home() {
             return (
               <div
                 key={skill.name}
-                className="flex flex-col items-center gap-4 rounded-xl border border-primary/10 bg-card/50 p-6 text-center transition-all hover:border-primary/30 hover:shadow-lg"
+                className="flex flex-col items-center gap-4 rounded-xl border border-primary/10 bg-card/80 p-6 text-center transition-all hover:border-primary/30 hover:shadow-lg"
               >
                 <div className="rounded-full bg-primary/10 p-3">
                   <Icon className="h-8 w-8 text-primary" />
