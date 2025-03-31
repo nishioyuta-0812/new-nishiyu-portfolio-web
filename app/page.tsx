@@ -20,7 +20,7 @@ export default function Home() {
         <div
           className="absolute inset-0 -z-10 h-screen bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url("/backgrounds/mikuyuta.JPG")',
+            backgroundImage: 'url("/backgrounds/home-bg-anime.jpeg")',
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background/80" />

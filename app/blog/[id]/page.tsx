@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/card';
 import { Calendar, Clock, Share2, Tag } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 // Blog posts data
 const blogPosts = [

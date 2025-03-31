@@ -49,7 +49,7 @@ export default function Blog() {
   return (
     <PageLayout
       title="技術ブログ"
-      backgroundImage="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2940"
+      backgroundImage="/backgrounds/blog-bg-anime.jpeg"
       description="ソフトウェア開発に関する知見、最新技術のトレンド、プロジェクトでの経験などを発信しています。"
     >
       {/* Featured Post */}

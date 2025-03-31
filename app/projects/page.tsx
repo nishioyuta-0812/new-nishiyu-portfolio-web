@@ -59,7 +59,7 @@ export default function Projects() {
   return (
     <PageLayout
       title="プロジェクト"
-      backgroundImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940"
+      backgroundImage="/backgrounds/projects-bg-anime.jpeg"
       description="これまでに手がけた主要なプロジェクトをご紹介します。各プロジェクトで技術的な課題解決と価値提供にこだわってきました。"
     >
       {/* Projects Grid */}

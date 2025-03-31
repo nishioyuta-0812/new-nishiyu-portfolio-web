@@ -12,9 +12,9 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: 'Software Engineer Portfolio',
+  title: 'Software Engineer Nishiyu Portfolio',
   description: 'Professional portfolio showcasing software engineering projects and skills',
-  authors: [{ name: 'Your Name' }],
+  authors: [{ name: 'Yuta Nishio' }],
   keywords: ['software engineer', 'portfolio', 'developer', 'projects'],
 };
 

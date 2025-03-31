@@ -73,7 +73,7 @@ export default function About() {
   return (
     <PageLayout
       title="私について"
-      backgroundImage="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2940"
+      backgroundImage="/backgrounds/about-anime.jpeg"
       description="技術を通じて、ユーザーとビジネスに価値を提供することを使命としています。フロントエンドからバックエンドまで、幅広い技術スタックを活用して、最適なソリューションを実現します。"
     >
 

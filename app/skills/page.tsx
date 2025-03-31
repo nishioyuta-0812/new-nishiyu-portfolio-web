@@ -110,7 +110,7 @@ export default function Skills() {
   return (
     <PageLayout
       title="スキル & 技術"
-      backgroundImage="https://images.unsplash.com/photo-1550439062-609e1531270e?q=80&w=2940"
+      backgroundImage="/backgrounds/skills-bg-anime.jpeg"
       description="5年以上のキャリアで培った技術スタックと専門知識をご紹介します。フロントエンドからインフラまで、幅広い領域での実践的なスキルを持っています。"
     >
 
