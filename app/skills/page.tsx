@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import {
   Brain,
   Code2,
@@ -29,10 +28,10 @@ const skillCategories = [
     icon: Layout,
     description: 'モダンなWebフロントエンド開発',
     skills: [
-      { name: 'React/Next.js', level: 95, description: '大規模アプリケーション開発経験あり' },
-      { name: 'TypeScript', level: 90, description: '型安全な開発を徹底' },
-      { name: 'HTML/CSS', level: 95, description: 'セマンティックなマークアップ' },
-      { name: 'Tailwind CSS', level: 90, description: '効率的なスタイリング' },
+      { name: 'React/Next.js', years: 95, description: '大規模アプリケーション開発経験あり' },
+      { name: 'TypeScript', years: 90, description: '型安全な開発を徹底' },
+      { name: 'HTML/CSS', years: 95, description: 'セマンティックなマークアップ' },
+      { name: 'Tailwind CSS', years: 90, description: '効率的なスタイリング' },
     ],
   },
   {
@@ -40,10 +39,10 @@ const skillCategories = [
     icon: Server,
     description: 'スケーラブルなサーバーサイド開発',
     skills: [
-      { name: 'Node.js', level: 85, description: 'Express, Fastifyでのサーバー構築' },
-      { name: 'Python', level: 80, description: 'FastAPI, Djangoでの開発経験' },
-      { name: 'GraphQL', level: 75, description: 'APIスキーマ設計と実装' },
-      { name: 'REST API', level: 90, description: 'RESTful設計原則に基づく開発' },
+      { name: 'Node.js', years: 85, description: 'Express, Fastifyでのサーバー構築' },
+      { name: 'Python', years: 80, description: 'FastAPI, Djangoでの開発経験' },
+      { name: 'GraphQL', years: 75, description: 'APIスキーマ設計と実装' },
+      { name: 'REST API', years: 90, description: 'RESTful設計原則に基づく開発' },
     ],
   },
   {
@@ -51,10 +50,10 @@ const skillCategories = [
     icon: Database,
     description: 'データモデリングと最適化',
     skills: [
-      { name: 'PostgreSQL', level: 85, description: 'パフォーマンスチューニング' },
-      { name: 'MySQL', level: 80, description: 'スキーマ設計と運用' },
-      { name: 'MongoDB', level: 75, description: 'NoSQLデータモデリング' },
-      { name: 'Redis', level: 70, description: 'キャッシュ戦略の実装' },
+      { name: 'PostgreSQL', years: 85, description: 'パフォーマンスチューニング' },
+      { name: 'MySQL', years: 80, description: 'スキーマ設計と運用' },
+      { name: 'MongoDB', years: 75, description: 'NoSQLデータモデリング' },
+      { name: 'Redis', years: 70, description: 'キャッシュ戦略の実装' },
     ],
   },
   {
@@ -62,10 +61,10 @@ const skillCategories = [
     icon: Globe,
     description: 'クラウドインフラの設計と運用',
     skills: [
-      { name: 'AWS', level: 80, description: 'ECS, Lambda等のサービス活用' },
-      { name: 'Docker', level: 85, description: 'コンテナ化と運用自動化' },
-      { name: 'CI/CD', level: 80, description: 'GitHub Actions, CircleCI' },
-      { name: 'Terraform', level: 70, description: 'IaCによるインフラ管理' },
+      { name: 'AWS', years: 80, description: 'ECS, Lambda等のサービス活用' },
+      { name: 'Docker', years: 85, description: 'コンテナ化と運用自動化' },
+      { name: 'CI/CD', years: 80, description: 'GitHub Actions, CircleCI' },
+      { name: 'Terraform', years: 70, description: 'IaCによるインフラ管理' },
     ],
   },
   {
@@ -73,10 +72,10 @@ const skillCategories = [
     icon: TestTube,
     description: '品質を担保する自動化テスト',
     skills: [
-      { name: 'Jest', level: 85, description: 'ユニットテスト作成' },
-      { name: 'Cypress', level: 80, description: 'E2Eテスト実装' },
-      { name: 'Playwright', level: 75, description: 'ブラウザテスト自動化' },
-      { name: 'Storybook', level: 80, description: 'UIコンポーネント管理' },
+      { name: 'Jest', years: 85, description: 'ユニットテスト作成' },
+      { name: 'Cypress', years: 80, description: 'E2Eテスト実装' },
+      { name: 'Playwright', years: 75, description: 'ブラウザテスト自動化' },
+      { name: 'Storybook', years: 80, description: 'UIコンポーネント管理' },
     ],
   },
   {
@@ -84,10 +83,10 @@ const skillCategories = [
     icon: Brain,
     description: '開発をサポートするスキル',
     skills: [
-      { name: 'Git', level: 90, description: 'バージョン管理とチーム開発' },
-      { name: 'アジャイル開発', level: 85, description: 'スクラムマスター経験' },
-      { name: 'UI/UXデザイン', level: 75, description: 'Figmaでのデザイン実装' },
-      { name: 'セキュリティ', level: 80, description: 'OWASP対策の実装' },
+      { name: 'Git', years: 90, description: 'バージョン管理とチーム開発' },
+      { name: 'アジャイル開発', years: 85, description: 'スクラムマスター経験' },
+      { name: 'UI/UXデザイン', years: 75, description: 'Figmaでのデザイン実装' },
+      { name: 'セキュリティ', years: 80, description: 'OWASP対策の実装' },
     ],
   },
 ];
@@ -134,13 +133,14 @@ export default function Skills() {
               <CardContent className="space-y-6">
                 {category.skills.map((skill, skillIndex) => (
                   <div key={skillIndex}>
-                    <div className="mb-2 flex items-center justify-between">
-                      <p className="font-medium">{skill.name}</p>
-                      <span className="text-sm text-muted-foreground">{skill.level}%</span>
-                    </div>
-                    <div className="space-y-2">
-                      <Progress value={skill.level} className="h-2" />
-                      <p className="text-sm text-muted-foreground">{skill.description}</p>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex-1">
+                        <p className="font-medium mb-1">{skill.name}</p>
+                        <p className="text-sm text-muted-foreground">{skill.description}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-primary">{skill.years}年</p>
+                      </div>
                     </div>
                   </div>
                 ))}

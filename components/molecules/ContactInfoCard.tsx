@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { DivideIcon as LucideIcon } from 'lucide-react';
 
 interface ContactInfoCardProps {
-  icon: LucideIcon;
+  icon: typeof LucideIcon;
   title: string;
   children: React.ReactNode;
 }
