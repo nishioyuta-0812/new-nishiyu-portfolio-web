@@ -28,10 +28,12 @@ const skillCategories = [
     icon: Layout,
     description: 'モダンなWebフロントエンド開発',
     skills: [
-      { name: 'React/Next.js', years: 95, description: '大規模アプリケーション開発経験あり' },
-      { name: 'TypeScript', years: 90, description: '型安全な開発を徹底' },
-      { name: 'HTML/CSS', years: 95, description: 'セマンティックなマークアップ' },
-      { name: 'Tailwind CSS', years: 90, description: '効率的なスタイリング' },
+      { name: 'React/Next.js', years: 1, description: '大規模アプリケーション開発経験あり' },
+      { name: 'Vue/Nuxt.js', years: 2, description: '大規模アプリケーション開発経験あり' },
+      { name: 'Angular/TS・Dart', years: 2, description: '大規模アプリケーション開発経験あり' },
+      { name: 'TypeScript', years: 5, description: '型安全な開発を徹底' },
+      { name: 'HTML/CSS', years: 5, description: 'セマンティックなマークアップ' },
+      { name: 'Tailwind CSS', years: 3, description: '効率的なスタイリング' },
     ],
   },
   {
@@ -39,10 +41,15 @@ const skillCategories = [
     icon: Server,
     description: 'スケーラブルなサーバーサイド開発',
     skills: [
-      { name: 'Node.js', years: 85, description: 'Express, Fastifyでのサーバー構築' },
-      { name: 'Python', years: 80, description: 'FastAPI, Djangoでの開発経験' },
-      { name: 'GraphQL', years: 75, description: 'APIスキーマ設計と実装' },
-      { name: 'REST API', years: 90, description: 'RESTful設計原則に基づく開発' },
+      { name: 'Java', years: 3, description: 'Spring Bootでの開発経験' },
+      { name: 'Kotlin', years: 3, description: 'Spring Bootでの開発経験' },
+      { name: 'Elixir', years: 1, description: 'Phoenixでの開発経験' },
+      { name: 'Clojure', years: 1, description: 'バックエンド開発' },
+      { name: 'Node.js', years: 3, description: 'Express, Fastifyでのサーバー構築' },
+      { name: 'GraphQL', years: 1, description: 'APIスキーマ設計と実装' },
+      { name: 'REST API', years: 5, description: 'RESTful設計原則に基づく開発' },
+      { name: 'Go', years: 1, description: 'バックエンド開発' },
+      { name: 'ruby', years: 2, description: 'railsでの開発経験' },
     ],
   },
   {
@@ -50,10 +57,10 @@ const skillCategories = [
     icon: Database,
     description: 'データモデリングと最適化',
     skills: [
-      { name: 'PostgreSQL', years: 85, description: 'パフォーマンスチューニング' },
-      { name: 'MySQL', years: 80, description: 'スキーマ設計と運用' },
-      { name: 'MongoDB', years: 75, description: 'NoSQLデータモデリング' },
-      { name: 'Redis', years: 70, description: 'キャッシュ戦略の実装' },
+      { name: 'MySQL', years: 5, description: 'スキーマ設計と運用' },
+      { name: 'PostgreSQL', years: 2, description: 'パフォーマンスチューニング' },
+      { name: 'Redis', years: 3, description: 'キャッシュ戦略の実装' },
+      { name: 'spanner', years: 1, description: 'データベース設計・運用' },
     ],
   },
   {
@@ -61,10 +68,12 @@ const skillCategories = [
     icon: Globe,
     description: 'クラウドインフラの設計と運用',
     skills: [
-      { name: 'AWS', years: 80, description: 'ECS, Lambda等のサービス活用' },
-      { name: 'Docker', years: 85, description: 'コンテナ化と運用自動化' },
-      { name: 'CI/CD', years: 80, description: 'GitHub Actions, CircleCI' },
-      { name: 'Terraform', years: 70, description: 'IaCによるインフラ管理' },
+      { name: 'AWS', years: 3, description: 'ECS, Lambda等のサービス活用' },
+      { name: 'GCP', years: 2, description: 'GCS, サービス活用' },
+      { name: 'Docker', years: 5, description: 'コンテナ化と運用自動化' },
+      { name: 'Kubernetes', years: 5, description: 'コンテナ化と運用自動化' },
+      { name: 'CI/CD', years: 5, description: 'GitHub Actions, CircleCI' },
+      { name: 'Terraform', years: 3, description: 'IaCによるインフラ管理' },
     ],
   },
   {
@@ -72,10 +81,8 @@ const skillCategories = [
     icon: TestTube,
     description: '品質を担保する自動化テスト',
     skills: [
-      { name: 'Jest', years: 85, description: 'ユニットテスト作成' },
-      { name: 'Cypress', years: 80, description: 'E2Eテスト実装' },
-      { name: 'Playwright', years: 75, description: 'ブラウザテスト自動化' },
-      { name: 'Storybook', years: 80, description: 'UIコンポーネント管理' },
+      { name: 'Jest', years: 4, description: 'ユニットテスト作成' },
+      { name: 'Gauge', years: 3, description: 'E2Eテスト実装' },
     ],
   },
   {
@@ -83,24 +90,21 @@ const skillCategories = [
     icon: Brain,
     description: '開発をサポートするスキル',
     skills: [
-      { name: 'Git', years: 90, description: 'バージョン管理とチーム開発' },
-      { name: 'アジャイル開発', years: 85, description: 'スクラムマスター経験' },
-      { name: 'UI/UXデザイン', years: 75, description: 'Figmaでのデザイン実装' },
-      { name: 'セキュリティ', years: 80, description: 'OWASP対策の実装' },
+      { name: 'Git', years: 5, description: 'バージョン管理とチーム開発' },
+      { name: 'アジャイル開発', years: 5, description: 'スクラムマスター経験' },
+      { name: 'XP', years: 2, description: 'ペアプロなど' },
     ],
   },
 ];
 
 const certifications = [
-  { name: 'AWS Certified Solutions Architect', year: '2023' },
-  { name: 'Google Cloud Professional Developer', year: '2022' },
-  { name: 'Information Security Specialist', year: '2021' },
+  { name: 'ITパスポート', year: '2020' },
 ];
 
 const tools = [
   { icon: Code2, name: 'VSCode', description: 'プライマリエディタ' },
+  { icon: Code2, name: 'Cursor', description: 'プライマリエディタ' },
   { icon: Settings, name: 'WebStorm', description: 'JavaScript/TypeScript開発' },
-  { icon: Smartphone, name: 'Figma', description: 'UIデザイン' },
   { icon: LinkIcon, name: 'Postman', description: 'API開発・テスト' },
   { icon: Users, name: 'Slack', description: 'チームコミュニケーション' },
 ];
