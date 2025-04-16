@@ -4,8 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const skills = [
-  { name: 'フロントエンド開発', icon: Laptop, description: 'React, Next.js, TypeScript' },
-  { name: 'バックエンド開発', icon: Code2, description: 'Node.js, Python, SQL' },
+  { name: 'フロントエンド開発', icon: Laptop, description: 'React, Next.js, Vue, Nuxt.js,TypeScript' },
+  { name: 'バックエンド開発', icon: Code2, description: 'Node.js, Kotlin, Go, SQL' },
   { name: 'プロジェクト管理', icon: Briefcase, description: 'アジャイル開発, Git' },
   { name: '技術文書作成', icon: FileText, description: '設計書, API仕様書' },
   { name: 'コミュニケーション', icon: Mail, description: 'チーム協業, 顧客折衝' },

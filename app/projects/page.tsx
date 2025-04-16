@@ -4,53 +4,32 @@ import { ProjectsCallToAction } from '@/components/organisms/ProjectsCallToActio
 
 const projects = [
   {
-    title: 'ECサイトリニューアル',
-    description: '大手アパレルブランドのECサイトをNext.js/TypeScriptで刷新',
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Supabase'],
-    period: '2023.04 - 2023.12',
-    role: 'リードエンジニア',
+    title: '謎解き情報サイトの開発',
+    description: '謎解き情報サイト(ナゾヒロバ)の開発・運用を担当。',
+    image: 'https://images.ctfassets.net/abbf825q640s/5x9JQvCTor3XfYxA52ctQC/1c3c4309a301b5e5bad2f008058c050b/ogp.png',
+    tags: ['Nuxt.js', 'TypeScript', 'firebase', 'Supabase'],
+    period: '2022.08 - 現在',
+    role: 'フルスタックエンジニア',
     points: [
-      'パフォーマンス最適化によりLighthouse スコア95点以上を達成',
-      'マイクロサービスアーキテクチャの設計と実装',
-      'チーム10名のマネジメントとコードレビュー',
+      'Nuxt.jsを使用したフロントエンド開発',
+      'Nuxt2からNuxt3への移行',
     ],
     links: {
-      github: 'https://github.com',
-      demo: 'https://example.com',
+      demo: 'https://nazohiroba.com/',
     },
   },
   {
-    title: '社内業務効率化システム',
-    description: '申請承認ワークフローと文書管理機能を統合した業務システム',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40',
-    tags: ['React', 'Node.js', 'PostgreSQL', 'Docker'],
+    title: 'スマホアプリゲームの開発',
+    description: 'スマホアプリゲーム Tokotyuの開発を担当。※現在は入手不可',
+    image: 'https://images.ctfassets.net/8xh65zd1fi2o/3qQSeZy3I7oH2qwaahWqqm/0f44810aa3f255d461702285f5124826/____________.png',
+    tags: ['Unity', 'C#'],
     period: '2022.10 - 2023.03',
     role: 'フルスタックエンジニア',
     points: [
-      '承認プロセスの自動化により処理時間を70%削減',
-      'セキュアなドキュメント共有システムの実装',
-      'レガシーシステムからのデータ移行を担当',
+      'Unityを使用したゲーム開発',
+      'C#を使用したゲームロジックの実装',
     ],
     links: {
-      github: 'https://github.com',
-    },
-  },
-  {
-    title: 'AIチャットボット',
-    description: 'GPT-4を活用したカスタマーサポート向けチャットボット',
-    image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a',
-    tags: ['Python', 'FastAPI', 'OpenAI API', 'React'],
-    period: '2022.07 - 2022.09',
-    role: 'バックエンドエンジニア',
-    points: [
-      '問い合わせ対応時間を平均40%短縮',
-      'カスタムプロンプトエンジニアリングの実装',
-      '多言語対応機能の開発',
-    ],
-    links: {
-      github: 'https://github.com',
-      demo: 'https://example.com',
     },
   },
 ];
