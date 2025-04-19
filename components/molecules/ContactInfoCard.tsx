@@ -1,8 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 interface ContactInfoCardProps {
-  icon: typeof LucideIcon;
+  icon: LucideIcon;
   title: string;
   children: React.ReactNode;
 }

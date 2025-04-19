@@ -6,10 +6,10 @@ export const ContactInfo = () => {
     <div className="grid gap-8 md:grid-cols-3">
       <ContactInfoCard icon={Mail} title="メール">
         <a
-          href="mailto:contact@example.com"
+          href="mailto:yutanishi0812@gmail.com"
           className="text-muted-foreground hover:text-primary"
         >
-          contact@example.com
+          yutanishi@gmail.com
         </a>
       </ContactInfoCard>
 
@@ -20,9 +20,7 @@ export const ContactInfo = () => {
       </ContactInfoCard>
 
       <ContactInfoCard icon={AtSign} title="SNS">
-        Twitter: @example
-        <br />
-        LinkedIn: /in/example
+        Twitter: @yutakun_27
       </ContactInfoCard>
     </div>
   );

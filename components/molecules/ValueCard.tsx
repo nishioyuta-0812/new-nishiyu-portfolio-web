@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 interface ValueCardProps {
-  icon: typeof LucideIcon;
+  icon: LucideIcon;
   title: string;
   description: string;
 }
