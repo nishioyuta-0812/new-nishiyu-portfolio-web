@@ -19,7 +19,7 @@ export default async function Blog() {
       {/* Recent Posts */}
       <section>
         <h2 className="font-jp text-2xl font-bold mb-8">最新の記事</h2>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {blogPosts.slice(1).map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}
