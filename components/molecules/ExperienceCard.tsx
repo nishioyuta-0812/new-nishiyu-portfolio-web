@@ -7,6 +7,7 @@ interface ExperienceCardProps {
   organization: string;
   period: string;
   description: string;
+  tags?: string[];
 }
 
 export const ExperienceCard = ({
@@ -15,6 +16,7 @@ export const ExperienceCard = ({
   organization,
   period,
   description,
+  tags = [],
 }: ExperienceCardProps) => {
   const Icon = type === 'work' ? Briefcase : GraduationCap;
 
@@ -32,7 +34,19 @@ export const ExperienceCard = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground mb-2">{description}</p>
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {tags.map((tag, index) => (
+              <span
+                key={index}
+                className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -15,7 +15,8 @@ const experience = [
     role: 'フリーランス Webエンジニア',
     company: '決済系webサービスのバックエンド開発',
     description:
-      'SESエンジニアとして、決済系webサービスのバックエンド開発のプロジェクトに参加、こちらでは主に運用保守を担当し、小規模な改修や問い合わせに対する調査などを行っています。'
+      'SESエンジニアとして、決済系webサービスのバックエンド開発のプロジェクトに参加、こちらでは主に運用保守を担当し、小規模な改修や問い合わせに対する調査などを行っています。',
+    tags: ['Go', 'GCP', 'Spanner', 'gRPC', 'Pub/Sub', 'Scrum開発', 'CI/CD', 'GitHub Actions', 'Terraform', 'Docker', 'Kubernetes', 'Datadog'],
   },
   {
     period: '2022 - 2024',
@@ -23,6 +24,7 @@ const experience = [
     company: 'ヘルスケアアプリ、OEMヘルスケアアプリのサーバーサイド開発',
     description:
       'SESエンジニアとして、ヘルスケアアプリ、OEMヘルスケアアプリのサーバーサイド開発プロジェクトに参加。主にバックエンドの開発を担当し、API設計、データベース設計などを行いました。 また、APIだけではなくネイティブアプリ内で表示するWebViewの開発も行い、フロントエンドからバックエンドまで幅広く対応しました。こちらも新規アプリケーションの立ち上げなども行いました。',
+      tags: ['Ruby', 'Rails', 'AWS', 'CircleCI', 'CI/CD', 'Terraform', 'Docker', 'Kubernetes', 'MySQL', 'Redis', 'tailwindcss', 'Datadog', 'Sentry', 'Scrum開発'],
   },
   {
     period: '2020 - 2022',
@@ -30,6 +32,7 @@ const experience = [
     company: 'BtoB向けビジネス情報webアプリ改修',
     description:
       'SESエンジニアとして、BtoB向けビジネス情報webアプリの改修プロジェクトに参加。主にビジネスサイドとのコミュニケーションと開発を担当し、要件定義から実装、リリース、保守までを行いました。フロントエンドからバックエンド、インフラなどフルスタックでの開発業務を行いました。マイクロフロントエンドを一から構築し、CI/CDの導入を行い、開発効率を大幅に向上させました。',
+    tags: ['Kotlin', 'Dart', 'TypeScript', 'Elixir', 'clojure', 'SpringBoot', 'Docker', 'Bootstrap', 'Thymeleaf', 'JUnit', 'AngularDart', 'Docker', 'kubernetes', 'Gauge', 'Selenium', 'GCP', 'TDD', 'DDD', 'AngularTS', 'phoenix', 'Duct', 'svelte', 'vite', 'ArgoCD', 'helm', 'skaffold', 'CDC', 'Jenkins', 'アジャイル開発', 'XP'],
   },
 ];
 
@@ -94,6 +97,7 @@ export default function About() {
               organization={item.company}
               period={item.period}
               description={item.description}
+              tags={item.tags}
             />
           ))}
           {education.map((item, index) => (
