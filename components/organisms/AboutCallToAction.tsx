@@ -12,7 +12,7 @@ export const AboutCallToAction = () => {
         <p className="mb-10 text-lg text-muted-foreground">
           新しいプロジェクトや機会についてのご相談をお待ちしています。
         </p>
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-4 flex-col md:flex-row">
           <Button size="lg" className="bg-primary/90 hover:bg-primary text-lg px-8" asChild>
             <Link href="/contact">お問い合わせ</Link>
           </Button>
