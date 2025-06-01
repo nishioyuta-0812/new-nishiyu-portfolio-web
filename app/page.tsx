@@ -16,7 +16,7 @@ const skills = [
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [visibleSections, setVisibleSections] = useState(new Set());
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   
   const heroRef = useRef(null);
   const skillsRef = useRef(null);
