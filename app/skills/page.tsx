@@ -1,4 +1,5 @@
-import { PageLayout } from '@/components/template/PageLayout';
+"use client";
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -21,6 +22,7 @@ import {
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
 
 const skillCategories = [
   {
@@ -110,117 +112,224 @@ const tools = [
 ];
 
 export default function Skills() {
-  return (
-    <PageLayout
-      title="スキル & 技術"
-      backgroundImage="/backgrounds/skills-bg-anime.jpeg"
-      description="5年以上のキャリアで培った技術スタックと専門知識をご紹介します。フロントエンドからインフラまで、幅広い領域での実践的なスキルを持っています。"
-    >
+  const [isVisible, setIsVisible] = useState(false);
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  
+  const heroRef = useRef(null);
+  const skillsRef = useRef(null);
+  const additionalRef = useRef(null);
+  const ctaRef = useRef(null);
 
-      {/* Skill Categories */}
-      <section className="mb-24 space-y-12">
-        {skillCategories.map((category, index) => {
-          const Icon = category.icon;
-          return (
-            <Card key={index} className="border-primary/10 transition-all duration-300 hover:border-primary/30 hover:shadow-lg">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <div className="rounded-full bg-primary/10 p-2">
-                    <Icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="font-jp text-2xl">{category.title}</CardTitle>
-                    <CardDescription>{category.description}</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {category.skills.map((skill, skillIndex) => (
-                  <div key={skillIndex}>
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex-1">
-                        <p className="font-medium mb-1">{skill.name}</p>
-                        <p className="text-sm text-muted-foreground">{skill.description}</p>
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleSections(prev => new Set([...prev, entry.target.id]));
+        }
+      });
+    }, observerOptions);
+    
+    // Observe sections
+    [heroRef, skillsRef, additionalRef, ctaRef].forEach(ref => {
+      if (ref.current) observer.observe(ref.current);
+    });
+    
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div className="relative overflow-hidden bg-gray-900">
+      <div className="flex flex-col gap-20 py-8 md:py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Hero Section */}
+        <section 
+          ref={heroRef}
+          id="hero"
+          className="flex flex-col items-center gap-8 text-center min-h-[50vh] justify-center"
+        >
+          <div
+            className={`absolute inset-0 -z-10 w-screen h-screen bg-cover bg-center bg-no-repeat transition-opacity duration-2000 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: 'url("/backgrounds/skills-bg-anime.jpeg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center center',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '100vw'
+            }}
+          >
+            <div className={`absolute inset-0 bg-gradient-to-b from-gray-900/30 via-blue-900/40 to-gray-900/90 transition-opacity duration-2000 delay-500 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`} />
+          </div>
+          
+          <div className={`space-y-6 max-w-4xl transition-all duration-1000 delay-300 transform ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <h1 className="font-jp text-4xl md:text-6xl font-bold text-white drop-shadow-2xl" style={{
+              textShadow: '0 0 20px rgba(59, 130, 246, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5)'
+            }}>
+              スキル & 技術
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-200/90 leading-relaxed drop-shadow-lg">
+              5年以上のキャリアで培った技術スタックと専門知識をご紹介します。
+              <br className="hidden sm:block" />
+              フロントエンドからインフラまで、幅広い領域での実践的なスキルを持っています。
+            </p>
+          </div>
+        </section>
+
+        {/* Skill Categories */}
+        <section 
+          ref={skillsRef}
+          id="skills"
+          className="mb-24 space-y-12"
+        >
+          {skillCategories.map((category, index) => {
+            const Icon = category.icon;
+            return (
+              <div
+                key={index}
+                className={`transition-all duration-700 transform ${
+                  visibleSections.has('skills') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+                }`}
+                style={{
+                  transitionDelay: visibleSections.has('skills') ? `${index * 150}ms` : '0ms'
+                }}
+              >
+                <Card className="border-blue-500/20 bg-gray-800/60 backdrop-blur-sm transition-all duration-300 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/30">
+                  <CardHeader>
+                    <div className="flex items-center gap-4">
+                      <div className="rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-3 border border-blue-400/30">
+                        <Icon className="h-6 w-6 text-blue-400" />
                       </div>
-                      <div className="text-right">
-                        <p className="font-bold text-primary">{skill.years}年</p>
+                      <div>
+                        <CardTitle className="font-jp text-2xl bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">{category.title}</CardTitle>
+                        <CardDescription className="text-blue-200/70">{category.description}</CardDescription>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {category.skills.map((skill, skillIndex) => (
+                      <div key={skillIndex}>
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex-1">
+                            <p className="font-medium mb-1 text-blue-200">{skill.name}</p>
+                            <p className="text-sm text-blue-300/70">{skill.description}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-cyan-400">{skill.years}年</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          })}
+        </section>
+
+        {/* Additional Skills */}
+        <section 
+          ref={additionalRef}
+          id="additional"
+          className="mb-24 grid gap-8 md:grid-cols-2"
+        >
+          {/* Certifications */}
+          <div className={`transition-all duration-700 transform ${
+            visibleSections.has('additional') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <Card className="border-blue-500/20 bg-gray-800/60 backdrop-blur-sm transition-all duration-300 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/30">
+              <CardHeader>
+                <CardTitle className="font-jp text-2xl bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">資格・認定</CardTitle>
+                <CardDescription className="text-blue-200/70">取得した技術資格</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {certifications.map((cert, index) => (
+                    <li key={index} className="flex items-center gap-4">
+                      <div className="rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-2 border border-blue-400/30">
+                        <Brain className="h-5 w-5 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-blue-200">{cert.name}</p>
+                        <p className="text-sm text-blue-300/70">取得年: {cert.year}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
-          );
-        })}
-      </section>
+          </div>
 
-      {/* Additional Skills */}
-      <section className="mb-24 grid gap-8 md:grid-cols-2">
-        {/* Certifications */}
-        <Card className="border-primary/10 transition-all duration-300 hover:border-primary/30 hover:shadow-lg">
-          <CardHeader>
-            <CardTitle className="font-jp text-2xl">資格・認定</CardTitle>
-            <CardDescription>取得した技術資格</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-4">
-              {certifications.map((cert, index) => (
-                <li key={index} className="flex items-center gap-4">
-                  <div className="rounded-full bg-primary/10 p-2">
-                    <Brain className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">{cert.name}</p>
-                    <p className="text-sm text-muted-foreground">取得年: {cert.year}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+          {/* Tools */}
+          <div className={`transition-all duration-700 delay-150 transform ${
+            visibleSections.has('additional') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <Card className="border-blue-500/20 bg-gray-800/60 backdrop-blur-sm transition-all duration-300 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/30">
+              <CardHeader>
+                <CardTitle className="font-jp text-2xl bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">開発ツール</CardTitle>
+                <CardDescription className="text-blue-200/70">普段使用している開発環境</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {tools.map((tool, index) => {
+                    const Icon = tool.icon;
+                    return (
+                      <li key={index} className="flex items-center gap-4">
+                        <div className="rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-2 border border-blue-400/30">
+                          <Icon className="h-5 w-5 text-blue-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-blue-200">{tool.name}</p>
+                          <p className="text-sm text-blue-300/70">{tool.description}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
-        {/* Tools */}
-        <Card className="border-primary/10 transition-all duration-300 hover:border-primary/30 hover:shadow-lg">
-          <CardHeader>
-            <CardTitle className="font-jp text-2xl">開発ツール</CardTitle>
-            <CardDescription>普段使用している開発環境</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-4">
-              {tools.map((tool, index) => {
-                const Icon = tool.icon;
-                return (
-                  <li key={index} className="flex items-center gap-4">
-                    <div className="rounded-full bg-primary/10 p-2">
-                      <Icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{tool.name}</p>
-                      <p className="text-sm text-muted-foreground">{tool.description}</p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Call to Action */}
-      <section className="text-center">
-        <div className="rounded-3xl bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 p-12 md:p-16 backdrop-blur-sm">
-          <div className="absolute inset-0 -z-10 rounded-3xl bg-white/5" />
-          <h2 className="font-jp mb-6 text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            プロジェクトでの活用事例をご覧ください
-          </h2>
-          <p className="mb-10 text-lg text-muted-foreground">
-            これらのスキルを活用した具体的なプロジェクト実績をご紹介しています。
-          </p>
-          <Button size="lg" className="bg-primary/90 hover:bg-primary text-lg px-8" asChild>
-            <Link href="/projects">プロジェクトを見る</Link>
-          </Button>
-        </div>
-      </section>
-    </PageLayout>
+        {/* Call to Action */}
+        <section 
+          ref={ctaRef}
+          id="cta"
+          className="text-center"
+        >
+          <div className={`rounded-2xl bg-gradient-to-r from-blue-600/15 via-indigo-600/15 to-cyan-500/15 backdrop-blur-sm p-8 md:p-12 border border-blue-400/30 shadow-2xl hover:shadow-blue-500/30 transition-all duration-700 transform hover:scale-105 ${
+            visibleSections.has('cta') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}
+          style={{
+            boxShadow: 'inset 0 1px 0 rgba(59, 130, 246, 0.2), 0 25px 50px rgba(59, 130, 246, 0.15)'
+          }}>
+            <h2 className="font-jp mb-6 text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              プロジェクトでの活用事例をご覧ください
+            </h2>
+            <p className="mb-10 text-lg text-blue-200/80">
+              これらのスキルを活用した具体的なプロジェクト実績をご紹介しています。
+            </p>
+            <Button size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white transform hover:scale-110 transition-all duration-500 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 border border-blue-400/30" asChild>
+              <Link href="/projects">プロジェクトを見る</Link>
+            </Button>
+          </div>
+        </section>
+      </div>
+    </div>
   );
 }

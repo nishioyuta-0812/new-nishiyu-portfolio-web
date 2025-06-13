@@ -1,4 +1,5 @@
-import { PageLayout } from '@/components/template/PageLayout';
+"use client";
+
 import { ExperienceCard } from '@/components/molecules/ExperienceCard';
 import { ValueCard } from '@/components/molecules/ValueCard';
 import { AboutCallToAction } from '@/components/organisms/AboutCallToAction';
@@ -8,6 +9,7 @@ import {
   Target,
   Users,
 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 
 const experience = [
   {
@@ -73,64 +75,195 @@ const values = [
 ];
 
 export default function About() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  
+  const heroRef = useRef(null);
+  const experienceRef = useRef(null);
+  const valuesRef = useRef(null);
+  const ctaRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleSections(prev => new Set([...prev, entry.target.id]));
+        }
+      });
+    }, observerOptions);
+    
+    // Observe sections
+    [heroRef, experienceRef, valuesRef, ctaRef].forEach(ref => {
+      if (ref.current) observer.observe(ref.current);
+    });
+    
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <PageLayout
-      title="私について"
-      backgroundImage="/backgrounds/about-anime.jpeg"
-      description="技術を通じて、ユーザーとビジネスに価値を提供することを使命としています。フロントエンドからバックエンドまで、幅広い技術スタックを活用して、最適なソリューションを実現します。"
-    >
+    <div className="relative overflow-hidden bg-gray-900">
+      <div className="flex flex-col gap-20 py-8 md:py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Hero Section */}
+        <section 
+          ref={heroRef}
+          id="hero"
+          className="flex flex-col items-center gap-8 text-center min-h-[50vh] justify-center"
+        >
+          <div
+            className={`absolute inset-0 -z-10 w-screen h-screen bg-cover bg-center bg-no-repeat transition-opacity duration-2000 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: 'url("/backgrounds/about-anime.jpeg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center center',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '100vw'
+            }}
+          >
+            <div className={`absolute inset-0 bg-gradient-to-b from-gray-900/30 via-blue-900/40 to-gray-900/90 transition-opacity duration-2000 delay-500 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`} />
+          </div>
+          
+          <div className={`space-y-6 max-w-4xl transition-all duration-1000 delay-300 transform ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <h1 className="font-jp text-4xl md:text-6xl font-bold text-white drop-shadow-2xl" style={{
+              textShadow: '0 0 20px rgba(59, 130, 246, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5)'
+            }}>
+              私について
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-200/90 leading-relaxed drop-shadow-lg">
+              技術を通じて、ユーザーとビジネスに価値を提供することを使命としています。
+              <br className="hidden sm:block" />
+              フロントエンドからバックエンドまで、幅広い技術スタックを活用して、
+              <br className="hidden sm:block" />
+              最適なソリューションを実現します。
+            </p>
+          </div>
+        </section>
 
-      {/* Career History */}
-      <section className="mb-24">
-        <div className="mb-8">
-          <h2 className="font-jp mb-3 text-3xl font-bold">経歴</h2>
-          <p className="text-lg text-muted-foreground">
-            これまでのキャリアと主な成果をご紹介します。
-          </p>
-        </div>
-        <div className="space-y-6">
-          {experience.map((item, index) => (
-            <ExperienceCard
-              key={index}
-              type="work"
-              title={item.role}
-              organization={item.company}
-              period={item.period}
-              description={item.description}
-              tags={item.tags}
-            />
-          ))}
-          {education.map((item, index) => (
-            <ExperienceCard
-              key={index}
-              type="education"
-              title={item.degree}
-              organization={item.school}
-              period={item.period}
-              description={item.description}
-            />
-          ))}
-        </div>
-      </section>
+        {/* Career History */}
+        <section 
+          ref={experienceRef}
+          id="experience"
+          className="mb-32"
+        >
+          <div className={`mb-16 text-center transition-all duration-1000 transform ${
+            visibleSections.has('experience') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <h2 className="font-jp mb-6 text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              経歴
+            </h2>
+            <p className="text-xl text-blue-200/80 max-w-2xl mx-auto">
+              これまでのキャリアと主な成果をご紹介します。
+            </p>
+          </div>
+          <div className="space-y-8">
+            {experience.map((item, index) => (
+              <div
+                key={index}
+                className={`transition-all duration-700 transform ${
+                  visibleSections.has('experience') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+                }`}
+                style={{
+                  transitionDelay: visibleSections.has('experience') ? `${index * 150}ms` : '0ms'
+                }}
+              >
+                <ExperienceCard
+                  type="work"
+                  title={item.role}
+                  organization={item.company}
+                  period={item.period}
+                  description={item.description}
+                  tags={item.tags}
+                />
+              </div>
+            ))}
+            {education.map((item, index) => (
+              <div
+                key={index}
+                className={`transition-all duration-700 transform ${
+                  visibleSections.has('experience') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+                }`}
+                style={{
+                  transitionDelay: visibleSections.has('experience') ? `${(experience.length + index) * 150}ms` : '0ms'
+                }}
+              >
+                <ExperienceCard
+                  type="education"
+                  title={item.degree}
+                  organization={item.school}
+                  period={item.period}
+                  description={item.description}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
 
-      {/* Values */}
-      <section className="mb-24">
-        <div className="mb-8">
-          <h2 className="font-jp mb-3 text-3xl font-bold">価値観</h2>
-          <p className="text-lg text-muted-foreground">
-            エンジニアとしての信念と大切にしていること
-          </p>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2">
-          {values.map((value, index) => {
-            const Icon = value.icon;
-            return <ValueCard key={index} icon={Icon} title={value.title} description={value.description} />;
-          })}
-        </div>
-      </section>
+        {/* Values */}
+        <section 
+          ref={valuesRef}
+          id="values"
+          className="mb-32"
+        >
+          <div className={`mb-16 text-center transition-all duration-1000 transform ${
+            visibleSections.has('values') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <h2 className="font-jp mb-6 text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              価値観
+            </h2>
+            <p className="text-xl text-blue-200/80 max-w-2xl mx-auto">
+              エンジニアとしての信念と大切にしていること
+            </p>
+          </div>
+          <div className="grid gap-8 sm:grid-cols-2">
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <div
+                  key={index}
+                  className={`transition-all duration-700 transform ${
+                    visibleSections.has('values') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+                  }`}
+                  style={{
+                    transitionDelay: visibleSections.has('values') ? `${index * 150}ms` : '0ms'
+                  }}
+                >
+                  <ValueCard icon={Icon} title={value.title} description={value.description} />
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
-      {/* Call to Action */}
-      <AboutCallToAction />
-    </PageLayout>
+        {/* Call to Action */}
+        <section 
+          ref={ctaRef}
+          id="cta"
+          className="text-center"
+        >
+          <div className={`transition-all duration-1000 transform ${
+            visibleSections.has('cta') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <AboutCallToAction />
+          </div>
+        </section>
+      </div>
+    </div>
   );
 }

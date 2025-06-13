@@ -18,22 +18,25 @@ export interface BlogPost {
 }
 
 export async function getAllPosts(): Promise<BlogPost[]> {
-  const response = await client.getEntries({
-    content_type: 'blog',
-  });
+  try {
+    const response = await client.getEntries({
+      content_type: 'blog',
+    });
 
-  return response.items.map((item: any) => ({
-    id: item.sys.id,
-    title: item.fields.title,
-    description: '',
-    image: item.fields.thumbnail.fields.file.url,
-    date: item.sys.updatedAt.substring(0,10),
-    readTime: item.fields.readTime,
-    tags: [],
-    content: item.fields.content,
-  }));
-
-  
+    return response.items.map((item: any) => ({
+      id: item.sys.id,
+      title: item.fields.title || 'Untitled',
+      description: item.fields.description || '',
+      image: item.fields.thumbnail?.fields?.file?.url || '',
+      date: item.sys.updatedAt.substring(0,10),
+      readTime: item.fields.readTime || '5分',
+      tags: item.fields.tags || [],
+      content: item.fields.content || '',
+    }));
+  } catch (error) {
+    console.error('Error fetching posts from Contentful:', error);
+    return [];
+  }
 }
 
 export async function getPostById(id: string): Promise<BlogPost | null> {
@@ -43,15 +46,16 @@ export async function getPostById(id: string): Promise<BlogPost | null> {
     
     return {
       id: item.sys.id,
-      title: item.fields.title,
-      description: '',
-      image: item.fields.thumbnail.fields.file.url,
+      title: item.fields.title || 'Untitled',
+      description: item.fields.description || '',
+      image: item.fields.thumbnail?.fields?.file?.url || '',
       date: item.sys.updatedAt.substring(0,10),
-      readTime: item.fields.readTime,
-      tags: [],
-      content: item.fields.content,
+      readTime: item.fields.readTime || '5分',
+      tags: item.fields.tags || [],
+      content: item.fields.content || '',
     };
   } catch (error) {
+    console.error('Error fetching post by ID from Contentful:', error);
     return null;
   }
 } 

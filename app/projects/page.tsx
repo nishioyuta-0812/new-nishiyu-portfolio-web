@@ -1,6 +1,8 @@
-import { PageLayout } from '@/components/template/PageLayout';
+"use client";
+
 import { ProjectCard } from '@/components/molecules/ProjectCard';
 import { ProjectsCallToAction } from '@/components/organisms/ProjectsCallToAction';
+import { useState, useEffect, useRef } from 'react';
 
 const projects = [
   {
@@ -35,21 +37,117 @@ const projects = [
 ];
 
 export default function Projects() {
-  return (
-    <PageLayout
-      title="プロジェクト"
-      backgroundImage="/backgrounds/projects-bg-anime.jpeg"
-      description="これまでに手がけた主要なプロジェクトをご紹介します。各プロジェクトで技術的な課題解決と価値提供にこだわってきました。"
-    >
-      {/* Projects Grid */}
-      <section className="space-y-12 mb-24">
-        {projects.map((project, index) => (
-          <ProjectCard key={index} project={project} />
-        ))}
-      </section>
+  const [isVisible, setIsVisible] = useState(false);
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  
+  const heroRef = useRef(null);
+  const projectsRef = useRef(null);
+  const ctaRef = useRef(null);
 
-      {/* Call to Action */}
-      <ProjectsCallToAction />
-    </PageLayout>
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleSections(prev => new Set([...prev, entry.target.id]));
+        }
+      });
+    }, observerOptions);
+    
+    // Observe sections
+    [heroRef, projectsRef, ctaRef].forEach(ref => {
+      if (ref.current) observer.observe(ref.current);
+    });
+    
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div className="relative overflow-hidden bg-gray-900">
+      <div className="flex flex-col gap-20 py-8 md:py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Hero Section */}
+        <section 
+          ref={heroRef}
+          id="hero"
+          className="flex flex-col items-center gap-8 text-center min-h-[50vh] justify-center"
+        >
+          <div
+            className={`absolute inset-0 -z-10 w-screen h-screen bg-cover bg-center bg-no-repeat transition-opacity duration-2000 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: 'url("/backgrounds/projects-bg-anime.jpeg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center center',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '100vw'
+            }}
+          >
+            <div className={`absolute inset-0 bg-gradient-to-b from-gray-900/30 via-blue-900/40 to-gray-900/90 transition-opacity duration-2000 delay-500 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`} />
+          </div>
+          
+          <div className={`space-y-6 max-w-4xl transition-all duration-1000 delay-300 transform ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <h1 className="font-jp text-4xl md:text-6xl font-bold text-white drop-shadow-2xl" style={{
+              textShadow: '0 0 20px rgba(59, 130, 246, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5)'
+            }}>
+              プロジェクト
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-200/90 leading-relaxed drop-shadow-lg">
+              これまでに手がけた主要なプロジェクトをご紹介します。
+              <br className="hidden sm:block" />
+              各プロジェクトで技術的な課題解決と価値提供にこだわってきました。
+            </p>
+          </div>
+        </section>
+
+        {/* Projects Grid */}
+        <section 
+          ref={projectsRef}
+          id="projects"
+          className="space-y-12 mb-24"
+        >
+          {projects.map((project, index) => (
+            <div
+              key={index}
+              className={`transition-all duration-700 transform ${
+                visibleSections.has('projects') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+              }`}
+              style={{
+                transitionDelay: visibleSections.has('projects') ? `${index * 200}ms` : '0ms'
+              }}
+            >
+              <ProjectCard project={project} />
+            </div>
+          ))}
+        </section>
+
+        {/* Call to Action */}
+        <section 
+          ref={ctaRef}
+          id="cta"
+        >
+          <div className={`transition-all duration-1000 transform ${
+            visibleSections.has('cta') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+          }`}>
+            <ProjectsCallToAction />
+          </div>
+        </section>
+      </div>
+    </div>
   );
 }
