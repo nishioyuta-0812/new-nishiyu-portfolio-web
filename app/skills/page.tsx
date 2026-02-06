@@ -1,33 +1,14 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Brain,
-  Code2,
-  Database,
-  Globe,
-  Layout,
-  Link as LinkIcon,
-  Server,
-  Settings,
-  Smartphone,
-  TestTube,
-  Users,
-} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain, Code2, Database, Globe, Layout, Link as LinkIcon, Server, Settings, TestTube, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 
 const skillCategories = [
   {
-    title: 'フロントエンド',
-    icon: Layout,
+    title: 'フロントエンド', icon: Layout, code: 'SYS-FE',
     description: 'モダンなWebフロントエンド開発',
     skills: [
       { name: 'React/Next.js', years: 1, description: '大規模アプリケーション開発経験あり' },
@@ -39,8 +20,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'バックエンド',
-    icon: Server,
+    title: 'バックエンド', icon: Server, code: 'SYS-BE',
     description: 'スケーラブルなサーバーサイド開発',
     skills: [
       { name: 'Java', years: 3, description: 'Spring Bootでの開発経験' },
@@ -55,8 +35,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'データベース',
-    icon: Database,
+    title: 'データベース', icon: Database, code: 'SYS-DB',
     description: 'データモデリングと最適化',
     skills: [
       { name: 'MySQL', years: 5, description: 'スキーマ設計と運用' },
@@ -66,8 +45,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'インフラストラクチャ',
-    icon: Globe,
+    title: 'インフラストラクチャ', icon: Globe, code: 'SYS-IF',
     description: 'クラウドインフラの設計と運用',
     skills: [
       { name: 'AWS', years: 3, description: 'ECS, Lambda等のサービス活用' },
@@ -79,8 +57,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'テスト/品質管理',
-    icon: TestTube,
+    title: 'テスト/品質管理', icon: TestTube, code: 'SYS-QA',
     description: '品質を担保する自動化テスト',
     skills: [
       { name: 'Jest', years: 4, description: 'ユニットテスト作成' },
@@ -88,8 +65,7 @@ const skillCategories = [
     ],
   },
   {
-    title: 'その他',
-    icon: Brain,
+    title: 'その他', icon: Brain, code: 'SYS-OT',
     description: '開発をサポートするスキル',
     skills: [
       { name: 'Git', years: 5, description: 'バージョン管理とチーム開発' },
@@ -99,9 +75,7 @@ const skillCategories = [
   },
 ];
 
-const certifications = [
-  { name: 'ITパスポート', year: '2020' },
-];
+const certifications = [{ name: 'ITパスポート', year: '2020' }];
 
 const tools = [
   { icon: Code2, name: 'VSCode', description: 'プライマリエディタ' },
@@ -114,7 +88,7 @@ const tools = [
 export default function Skills() {
   const [isVisible, setIsVisible] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
-  
+
   const heroRef = useRef(null);
   const skillsRef = useRef(null);
   const additionalRef = useRef(null);
@@ -122,68 +96,43 @@ export default function Skills() {
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
-    
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-    
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setVisibleSections(prev => new Set([...prev, entry.target.id]));
         }
       });
-    }, observerOptions);
-    
-    // Observe sections
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
     [heroRef, skillsRef, additionalRef, ctaRef].forEach(ref => {
       if (ref.current) observer.observe(ref.current);
     });
-    
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    };
+
+    return () => { clearTimeout(timer); observer.disconnect(); };
   }, []);
 
   return (
-    <div className="relative overflow-hidden bg-gray-900">
+    <div className="relative overflow-hidden bg-[#060a14]">
+      <div className="fixed inset-0 pointer-events-none opacity-[0.02]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(30, 144, 255, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 144, 255, 1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }}
+      />
+
       <div className="flex flex-col gap-20 py-8 md:py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Hero Section */}
-        <section 
-          ref={heroRef}
-          id="hero"
-          className="flex flex-col items-center gap-8 text-center min-h-[50vh] justify-center"
-        >
-          <div
-            className={`absolute inset-0 -z-10 w-screen h-screen bg-cover bg-center bg-no-repeat transition-opacity duration-2000 ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{
-              backgroundImage: 'url("/backgrounds/skills-bg-anime.jpeg")',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '100vw'
-            }}
-          >
-            <div className={`absolute inset-0 bg-gradient-to-b from-gray-900/30 via-blue-900/40 to-gray-900/90 transition-opacity duration-2000 delay-500 ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`} />
-          </div>
-          
-          <div className={`space-y-6 max-w-4xl transition-all duration-1000 delay-300 transform ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}>
-            <h1 className="font-jp text-4xl md:text-6xl font-bold text-white drop-shadow-2xl" style={{
-              textShadow: '0 0 20px rgba(59, 130, 246, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5)'
-            }}>
+        {/* Hero */}
+        <section ref={heroRef} id="hero" className="flex flex-col items-center gap-8 text-center min-h-[50vh] justify-center">
+          <div className={`space-y-6 max-w-4xl transition-all duration-1000 delay-300 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#1e90ff]/50" />
+              <span className="font-mono text-xs text-[#e8b830]/60 tracking-widest">ARMAMENT DATA</span>
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#1e90ff]/50" />
+            </div>
+            <h1 className="font-jp text-4xl md:text-6xl font-bold text-white seed-text-glow tracking-wider">
               スキル & 技術
             </h1>
-            <p className="text-xl md:text-2xl text-blue-200/90 leading-relaxed drop-shadow-lg">
+            <p className="text-lg md:text-xl text-[#1e90ff]/60 leading-relaxed">
               5年以上のキャリアで培った技術スタックと専門知識をご紹介します。
               <br className="hidden sm:block" />
               フロントエンドからインフラまで、幅広い領域での実践的なスキルを持っています。
@@ -192,46 +141,51 @@ export default function Skills() {
         </section>
 
         {/* Skill Categories */}
-        <section 
-          ref={skillsRef}
-          id="skills"
-          className="mb-24 space-y-12"
-        >
+        <section ref={skillsRef} id="skills" className="mb-24 space-y-8">
           {skillCategories.map((category, index) => {
             const Icon = category.icon;
             return (
               <div
                 key={index}
-                className={`transition-all duration-700 transform ${
-                  visibleSections.has('skills') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-                }`}
-                style={{
-                  transitionDelay: visibleSections.has('skills') ? `${index * 150}ms` : '0ms'
-                }}
+                className={`transition-all duration-700 transform ${visibleSections.has('skills') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
+                style={{ transitionDelay: visibleSections.has('skills') ? `${index * 100}ms` : '0ms' }}
               >
-                <Card className="border-blue-500/20 bg-gray-800/60 backdrop-blur-sm transition-all duration-300 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/30">
+                <Card className="relative border-[#1e90ff]/10 bg-[#0a0f1e]/60 backdrop-blur-sm transition-all duration-300 hover:border-[#1e90ff]/30 hover:shadow-[0_0_20px_rgba(30,144,255,0.08)] overflow-hidden">
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[#1e90ff]/20" />
+                  <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-[#1e90ff]/20" />
+                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-[#1e90ff]/20" />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[#1e90ff]/20" />
+
                   <CardHeader>
-                    <div className="flex items-center gap-4">
-                      <div className="rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-3 border border-blue-400/30">
-                        <Icon className="h-6 w-6 text-blue-400" />
+                    <div className="flex items-center gap-3">
+                      <div className="rounded border border-[#1e90ff]/20 bg-[#1e90ff]/5 p-2.5">
+                        <Icon className="h-5 w-5 text-[#1e90ff]/70" />
                       </div>
-                      <div>
-                        <CardTitle className="font-jp text-2xl bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">{category.title}</CardTitle>
-                        <CardDescription className="text-blue-200/70">{category.description}</CardDescription>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-[10px] text-[#e8b830]/40">{category.code}</span>
+                        </div>
+                        <CardTitle className="font-jp text-xl text-white/90">{category.title}</CardTitle>
+                        <CardDescription className="text-[#1e90ff]/40">{category.description}</CardDescription>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-3">
                     {category.skills.map((skill, skillIndex) => (
-                      <div key={skillIndex}>
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <p className="font-medium mb-1 text-blue-200">{skill.name}</p>
-                            <p className="text-sm text-blue-300/70">{skill.description}</p>
+                      <div key={skillIndex} className="flex items-center justify-between gap-4 py-2 border-b border-[#1e90ff]/5 last:border-0">
+                        <div className="flex-1">
+                          <p className="font-medium text-sm text-white/80">{skill.name}</p>
+                          <p className="text-xs text-[#1e90ff]/40">{skill.description}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-1 bg-[#1e90ff]/10 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full"
+                              style={{ width: `${Math.min(skill.years * 20, 100)}%` }}
+                            />
                           </div>
-                          <div className="text-right">
-                            <p className="font-bold text-cyan-400">{skill.years}年</p>
-                          </div>
+                          <span className="font-mono text-xs text-[#e8b830]/60 w-8 text-right">{skill.years}yr</span>
                         </div>
                       </div>
                     ))}
@@ -243,30 +197,30 @@ export default function Skills() {
         </section>
 
         {/* Additional Skills */}
-        <section 
-          ref={additionalRef}
-          id="additional"
-          className="mb-24 grid gap-8 md:grid-cols-2"
-        >
-          {/* Certifications */}
-          <div className={`transition-all duration-700 transform ${
-            visibleSections.has('additional') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}>
-            <Card className="border-blue-500/20 bg-gray-800/60 backdrop-blur-sm transition-all duration-300 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/30">
+        <section ref={additionalRef} id="additional" className="mb-24 grid gap-6 md:grid-cols-2">
+          <div className={`transition-all duration-700 transform ${visibleSections.has('additional') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+            <Card className="group relative border-[#1e90ff]/10 bg-[#0a0f1e]/60 backdrop-blur-sm h-full overflow-hidden transition-all duration-300 hover:border-[#1e90ff]/30 hover:shadow-[0_0_20px_rgba(30,144,255,0.08)]">
+              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
               <CardHeader>
-                <CardTitle className="font-jp text-2xl bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">資格・認定</CardTitle>
-                <CardDescription className="text-blue-200/70">取得した技術資格</CardDescription>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] text-[#e8b830]/40">CERT</span>
+                </div>
+                <CardTitle className="font-jp text-xl text-white/90">資格・認定</CardTitle>
+                <CardDescription className="text-[#1e90ff]/40">取得した技術資格</CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-4">
+                <ul className="space-y-3">
                   {certifications.map((cert, index) => (
-                    <li key={index} className="flex items-center gap-4">
-                      <div className="rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-2 border border-blue-400/30">
-                        <Brain className="h-5 w-5 text-blue-400" />
+                    <li key={index} className="flex items-center gap-3">
+                      <div className="rounded border border-[#1e90ff]/20 bg-[#1e90ff]/5 p-1.5">
+                        <Brain className="h-4 w-4 text-[#1e90ff]/60" />
                       </div>
                       <div>
-                        <p className="font-medium text-blue-200">{cert.name}</p>
-                        <p className="text-sm text-blue-300/70">取得年: {cert.year}</p>
+                        <p className="font-medium text-sm text-white/80">{cert.name}</p>
+                        <p className="text-xs text-[#1e90ff]/40 font-mono">{cert.year}</p>
                       </div>
                     </li>
                   ))}
@@ -275,27 +229,31 @@ export default function Skills() {
             </Card>
           </div>
 
-          {/* Tools */}
-          <div className={`transition-all duration-700 delay-150 transform ${
-            visibleSections.has('additional') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}>
-            <Card className="border-blue-500/20 bg-gray-800/60 backdrop-blur-sm transition-all duration-300 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/30">
+          <div className={`transition-all duration-700 delay-150 transform ${visibleSections.has('additional') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+            <Card className="group relative border-[#1e90ff]/10 bg-[#0a0f1e]/60 backdrop-blur-sm h-full overflow-hidden transition-all duration-300 hover:border-[#1e90ff]/30 hover:shadow-[0_0_20px_rgba(30,144,255,0.08)]">
+              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+              <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
               <CardHeader>
-                <CardTitle className="font-jp text-2xl bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">開発ツール</CardTitle>
-                <CardDescription className="text-blue-200/70">普段使用している開発環境</CardDescription>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] text-[#e8b830]/40">TOOLS</span>
+                </div>
+                <CardTitle className="font-jp text-xl text-white/90">開発ツール</CardTitle>
+                <CardDescription className="text-[#1e90ff]/40">普段使用している開発環境</CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-4">
+                <ul className="space-y-3">
                   {tools.map((tool, index) => {
-                    const Icon = tool.icon;
+                    const ToolIcon = tool.icon;
                     return (
-                      <li key={index} className="flex items-center gap-4">
-                        <div className="rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-2 border border-blue-400/30">
-                          <Icon className="h-5 w-5 text-blue-400" />
+                      <li key={index} className="flex items-center gap-3">
+                        <div className="rounded border border-[#1e90ff]/20 bg-[#1e90ff]/5 p-1.5">
+                          <ToolIcon className="h-4 w-4 text-[#1e90ff]/60" />
                         </div>
                         <div>
-                          <p className="font-medium text-blue-200">{tool.name}</p>
-                          <p className="text-sm text-blue-300/70">{tool.description}</p>
+                          <p className="font-medium text-sm text-white/80">{tool.name}</p>
+                          <p className="text-xs text-[#1e90ff]/40">{tool.description}</p>
                         </div>
                       </li>
                     );
@@ -306,27 +264,39 @@ export default function Skills() {
           </div>
         </section>
 
-        {/* Call to Action */}
-        <section 
-          ref={ctaRef}
-          id="cta"
-          className="text-center"
-        >
-          <div className={`rounded-2xl bg-gradient-to-r from-blue-600/15 via-indigo-600/15 to-cyan-500/15 backdrop-blur-sm p-8 md:p-12 border border-blue-400/30 shadow-2xl hover:shadow-blue-500/30 transition-all duration-700 transform hover:scale-105 ${
-            visibleSections.has('cta') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}
-          style={{
-            boxShadow: 'inset 0 1px 0 rgba(59, 130, 246, 0.2), 0 25px 50px rgba(59, 130, 246, 0.15)'
-          }}>
-            <h2 className="font-jp mb-6 text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              プロジェクトでの活用事例をご覧ください
-            </h2>
-            <p className="mb-10 text-lg text-blue-200/80">
-              これらのスキルを活用した具体的なプロジェクト実績をご紹介しています。
-            </p>
-            <Button size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white transform hover:scale-110 transition-all duration-500 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 border border-blue-400/30" asChild>
-              <Link href="/projects">プロジェクトを見る</Link>
-            </Button>
+        {/* CTA */}
+        <section ref={ctaRef} id="cta" className="text-center">
+          <div className={`relative rounded border border-[#1e90ff]/20 p-8 md:p-12 overflow-hidden transition-all duration-700 transform hover:border-[#e8b830]/30 ${visibleSections.has('cta') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
+            style={{
+              background: 'linear-gradient(135deg, rgba(10, 15, 30, 0.9) 0%, rgba(30, 144, 255, 0.05) 50%, rgba(10, 15, 30, 0.9) 100%)',
+              boxShadow: 'inset 0 1px 0 rgba(30, 144, 255, 0.1), 0 20px 50px rgba(30, 144, 255, 0.05)',
+            }}>
+            <div className="absolute top-2 left-2 w-6 h-6 border-t border-l border-[#1e90ff]/30" />
+            <div className="absolute top-2 right-2 w-6 h-6 border-t border-r border-[#1e90ff]/30" />
+            <div className="absolute bottom-2 left-2 w-6 h-6 border-b border-l border-[#1e90ff]/30" />
+            <div className="absolute bottom-2 right-2 w-6 h-6 border-b border-r border-[#1e90ff]/30" />
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="w-8 h-[1px] bg-[#e8b830]/30" />
+                <span className="font-mono text-[10px] text-[#e8b830]/50 tracking-widest">MISSION BRIEF</span>
+                <div className="w-8 h-[1px] bg-[#e8b830]/30" />
+              </div>
+              <h2 className="font-jp mb-4 text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#1e90ff] to-[#00bfff] bg-clip-text text-transparent">
+                プロジェクトでの活用事例をご覧ください
+              </h2>
+              <p className="mb-8 text-[#1e90ff]/50 max-w-lg mx-auto">
+                これらのスキルを活用した具体的なプロジェクト実績をご紹介しています。
+              </p>
+              <Button size="lg" className="bg-gradient-to-r from-[#1e90ff] to-[#0066cc] hover:from-[#3ba0ff] hover:to-[#1e90ff] text-white border border-[#1e90ff]/30 transition-all duration-500 hover:shadow-[0_0_30px_rgba(30,144,255,0.3)] hover:scale-105 tracking-wider" asChild>
+                <Link href="/projects">
+                  <span className="flex items-center gap-2">
+                    <span className="font-mono text-xs opacity-50">▶</span>
+                    プロジェクトを見る
+                  </span>
+                </Link>
+              </Button>
+            </div>
           </div>
         </section>
       </div>

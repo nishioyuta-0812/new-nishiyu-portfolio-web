@@ -51,33 +51,29 @@ const values = [
   {
     icon: Heart,
     title: '品質へのこだわり',
-    description:
-      '単なる動作だけでなく、保守性、セキュリティ、パフォーマンスまで考慮した高品質なコードを追求します。',
+    description: '単なる動作だけでなく、保守性、セキュリティ、パフォーマンスまで考慮した高品質なコードを追求します。',
   },
   {
     icon: Users,
     title: 'チーム協業',
-    description:
-      '効果的なコミュニケーションと知識共有を通じて、チーム全体の成長に貢献します。',
+    description: '効果的なコミュニケーションと知識共有を通じて、チーム全体の成長に貢献します。',
   },
   {
     icon: Lightbulb,
     title: '継続的学習',
-    description:
-      '技術の進化に合わせて常に新しい知識を吸収し、最適なソリューションを提供します。',
+    description: '技術の進化に合わせて常に新しい知識を吸収し、最適なソリューションを提供します。',
   },
   {
     icon: Target,
     title: '目標達成への情熱',
-    description:
-      'プロジェクトの目標達成に向けて、課題を積極的に解決し、価値を届けることに全力を注ぎます。',
+    description: 'プロジェクトの目標達成に向けて、課題を積極的に解決し、価値を届けることに全力を注ぎます。',
   },
 ];
 
 export default function About() {
   const [isVisible, setIsVisible] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
-  
+
   const heroRef = useRef(null);
   const experienceRef = useRef(null);
   const valuesRef = useRef(null);
@@ -85,26 +81,19 @@ export default function About() {
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
-    
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-    
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setVisibleSections(prev => new Set([...prev, entry.target.id]));
         }
       });
-    }, observerOptions);
-    
-    // Observe sections
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
     [heroRef, experienceRef, valuesRef, ctaRef].forEach(ref => {
       if (ref.current) observer.observe(ref.current);
     });
-    
+
     return () => {
       clearTimeout(timer);
       observer.disconnect();
@@ -112,41 +101,37 @@ export default function About() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden bg-gray-900">
+    <div className="relative overflow-hidden bg-[#060a14]">
+      {/* Background grid */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.02]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(30, 144, 255, 1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(30, 144, 255, 1) 1px, transparent 1px)
+          `,
+          backgroundSize: '60px 60px'
+        }}
+      />
+
       <div className="flex flex-col gap-20 py-8 md:py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Hero Section */}
-        <section 
+        <section
           ref={heroRef}
           id="hero"
           className="flex flex-col items-center gap-8 text-center min-h-[50vh] justify-center"
         >
-          <div
-            className={`absolute inset-0 -z-10 w-screen h-screen bg-cover bg-center bg-no-repeat transition-opacity duration-2000 ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{
-              backgroundImage: 'url("/backgrounds/about-anime.jpeg")',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '100vw'
-            }}
-          >
-            <div className={`absolute inset-0 bg-gradient-to-b from-gray-900/30 via-blue-900/40 to-gray-900/90 transition-opacity duration-2000 delay-500 ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`} />
-          </div>
-          
           <div className={`space-y-6 max-w-4xl transition-all duration-1000 delay-300 transform ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
           }`}>
-            <h1 className="font-jp text-4xl md:text-6xl font-bold text-white drop-shadow-2xl" style={{
-              textShadow: '0 0 20px rgba(59, 130, 246, 0.8), 0 4px 8px rgba(0, 0, 0, 0.5)'
-            }}>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#1e90ff]/50" />
+              <span className="font-mono text-xs text-[#e8b830]/60 tracking-widest">PILOT PROFILE</span>
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#1e90ff]/50" />
+            </div>
+            <h1 className="font-jp text-4xl md:text-6xl font-bold text-white seed-text-glow tracking-wider">
               私について
             </h1>
-            <p className="text-xl md:text-2xl text-blue-200/90 leading-relaxed drop-shadow-lg">
+            <p className="text-lg md:text-xl text-[#1e90ff]/60 leading-relaxed">
               技術を通じて、ユーザーとビジネスに価値を提供することを使命としています。
               <br className="hidden sm:block" />
               フロントエンドからバックエンドまで、幅広い技術スタックを活用して、
@@ -157,22 +142,23 @@ export default function About() {
         </section>
 
         {/* Career History */}
-        <section 
-          ref={experienceRef}
-          id="experience"
-          className="mb-32"
-        >
+        <section ref={experienceRef} id="experience" className="mb-32">
           <div className={`mb-16 text-center transition-all duration-1000 transform ${
             visibleSections.has('experience') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
           }`}>
-            <h2 className="font-jp mb-6 text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#1e90ff]/50" />
+              <span className="font-mono text-xs text-[#e8b830]/60 tracking-widest">MISSION LOG</span>
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#1e90ff]/50" />
+            </div>
+            <h2 className="font-jp mb-4 text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#1e90ff] to-[#00bfff] bg-clip-text text-transparent">
               経歴
             </h2>
-            <p className="text-xl text-blue-200/80 max-w-2xl mx-auto">
+            <p className="text-[#1e90ff]/50 max-w-2xl mx-auto">
               これまでのキャリアと主な成果をご紹介します。
             </p>
           </div>
-          <div className="space-y-8">
+          <div className="space-y-6">
             {experience.map((item, index) => (
               <div
                 key={index}
@@ -216,22 +202,23 @@ export default function About() {
         </section>
 
         {/* Values */}
-        <section 
-          ref={valuesRef}
-          id="values"
-          className="mb-32"
-        >
+        <section ref={valuesRef} id="values" className="mb-32">
           <div className={`mb-16 text-center transition-all duration-1000 transform ${
             visibleSections.has('values') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
           }`}>
-            <h2 className="font-jp mb-6 text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#1e90ff]/50" />
+              <span className="font-mono text-xs text-[#e8b830]/60 tracking-widest">CORE VALUES</span>
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#1e90ff]/50" />
+            </div>
+            <h2 className="font-jp mb-4 text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#1e90ff] to-[#00bfff] bg-clip-text text-transparent">
               価値観
             </h2>
-            <p className="text-xl text-blue-200/80 max-w-2xl mx-auto">
+            <p className="text-[#1e90ff]/50 max-w-2xl mx-auto">
               エンジニアとしての信念と大切にしていること
             </p>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2">
             {values.map((value, index) => {
               const Icon = value.icon;
               return (
@@ -252,11 +239,7 @@ export default function About() {
         </section>
 
         {/* Call to Action */}
-        <section 
-          ref={ctaRef}
-          id="cta"
-          className="text-center"
-        >
+        <section ref={ctaRef} id="cta" className="text-center">
           <div className={`transition-all duration-1000 transform ${
             visibleSections.has('cta') ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
           }`}>

@@ -1,25 +1,37 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LucideIcon } from 'lucide-react';
 
 interface ContactInfoCardProps {
   icon: LucideIcon;
   title: string;
+  code?: string;
   children: React.ReactNode;
 }
 
-export const ContactInfoCard = ({ icon: Icon, title, children }: ContactInfoCardProps) => {
+export const ContactInfoCard = ({ icon: Icon, title, code, children }: ContactInfoCardProps) => {
   return (
-    <Card className="border-primary/10 transition-all duration-300 hover:border-primary/30 hover:shadow-lg">
+    <Card className="group relative border-[#1e90ff]/10 bg-[#0a0f1e]/60 backdrop-blur-sm transition-all duration-300 hover:border-[#1e90ff]/30 hover:shadow-[0_0_20px_rgba(30,144,255,0.08)] overflow-hidden">
+      {/* Corner accents */}
+      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+      <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+      <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#1e90ff]/20 group-hover:border-[#e8b830]/40 transition-colors duration-500" />
+
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <div className="rounded-full bg-primary/10 p-2">
-            <Icon className="h-5 w-5 text-primary" />
+        <div className="flex items-center gap-3">
+          <div className="rounded border border-[#1e90ff]/20 bg-[#1e90ff]/5 p-2 transition-all duration-300 group-hover:bg-[#1e90ff]/10 group-hover:border-[#1e90ff]/30">
+            <Icon className="h-4 w-4 text-[#1e90ff]/70 group-hover:text-[#1e90ff]" />
           </div>
-          <CardTitle className="font-jp text-lg">{title}</CardTitle>
+          <div className="flex-1">
+            <CardTitle className="font-jp text-lg text-white/90">{title}</CardTitle>
+          </div>
+          {code && (
+            <span className="font-mono text-[10px] text-[#e8b830]/40">{code}</span>
+          )}
         </div>
       </CardHeader>
       <CardContent>
-        <CardDescription>{children}</CardDescription>
+        <div className="text-sm">{children}</div>
       </CardContent>
     </Card>
   );
