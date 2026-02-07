@@ -100,9 +100,17 @@ export default function Home() {
   // Typing effect
   useEffect(() => {
     if (!isBooted) return;
-    const typingSpeed = isDeleting ? 50 : 80;
-    const pauseTime = isDeleting ? 500 : 1200;
     const currentTitle = jobTitles[jobTitleIndex];
+
+    // Determine delay: typing=80ms, deleting=50ms, pause at end=1200ms, pause at start=500ms
+    let delay: number;
+    if (!isDeleting && charIndex >= currentTitle.length) {
+      delay = 1200; // Pause before deleting
+    } else if (isDeleting && charIndex <= 0) {
+      delay = 500; // Pause before typing next
+    } else {
+      delay = isDeleting ? 50 : 80;
+    }
 
     const timer = setTimeout(() => {
       if (!isDeleting) {
@@ -110,7 +118,7 @@ export default function Home() {
           setCurrentJobTitle(currentTitle.substring(0, charIndex + 1));
           setCharIndex(charIndex + 1);
         } else {
-          setTimeout(() => setIsDeleting(true), pauseTime);
+          setIsDeleting(true);
         }
       } else {
         if (charIndex > 0) {
@@ -121,7 +129,7 @@ export default function Home() {
           setJobTitleIndex((jobTitleIndex + 1) % jobTitles.length);
         }
       }
-    }, typingSpeed);
+    }, delay);
 
     return () => clearTimeout(timer);
   }, [charIndex, isDeleting, jobTitleIndex, jobTitles, isBooted]);
@@ -316,7 +324,7 @@ export default function Home() {
               <span className="bg-gradient-to-r from-[#1e90ff] via-[#00bfff] to-[#1e90ff] bg-clip-text text-transparent font-bold tracking-wide">
                 {currentJobTitle}
               </span>
-              <span className="inline-block w-0.5 h-6 bg-[#1e90ff] ml-1 animate-pulse" />
+              <span className="inline-block w-0.5 h-6 bg-[#1e90ff] ml-1 animate-[cursor-blink_1s_step-end_infinite]" />
             </div>
             <p className="mx-auto max-w-[42rem] leading-relaxed text-[#1e90ff]/60 sm:text-lg">
               5年以上のWeb開発経験を持つフルスタックエンジニアです。
