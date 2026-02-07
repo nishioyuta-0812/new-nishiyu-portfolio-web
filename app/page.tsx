@@ -16,6 +16,7 @@ const skills = [
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [isBooted, setIsBooted] = useState(false);
+  const [bootAnimDone, setBootAnimDone] = useState(false);
   const [bootText, setBootText] = useState('');
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -24,6 +25,9 @@ export default function Home() {
   const [jobTitleIndex, setJobTitleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [seedPhase, setSeedPhase] = useState<'idle' | 'descend' | 'shatter' | 'awaken' | 'power' | 'settle'>('idle');
+  const [seedActive, setSeedActive] = useState(false);
+  const seedPhaseRef = useRef<string>('idle');
 
   const jobTitles = ['Software Engineer', 'フルスタックエンジニア'];
 
@@ -57,11 +61,68 @@ export default function Home() {
   }, []);
 
   const animateParticles = useCallback(() => {
-    setParticles(prev => prev.map(particle => ({
-      ...particle,
-      x: particle.x + particle.vx > window.innerWidth ? 0 : particle.x + particle.vx < 0 ? window.innerWidth : particle.x + particle.vx,
-      y: particle.y + particle.vy > window.innerHeight ? 0 : particle.y + particle.vy < 0 ? window.innerHeight : particle.y + particle.vy
-    })));
+    setParticles(prev => prev.map(particle => {
+      const phase = seedPhaseRef.current;
+      const speedMul = (phase === 'shatter' || phase === 'awaken') ? 4 : phase === 'power' ? 2.5 : phase === 'settle' ? 1.5 : 1;
+      const dx = particle.vx * speedMul;
+      const dy = particle.vy * speedMul;
+      return {
+        ...particle,
+        x: particle.x + dx > window.innerWidth ? 0 : particle.x + dx < 0 ? window.innerWidth : particle.x + dx,
+        y: particle.y + dy > window.innerHeight ? 0 : particle.y + dy < 0 ? window.innerHeight : particle.y + dy
+      };
+    }));
+  }, []);
+
+  const seedTimersRef = useRef<NodeJS.Timeout[]>([]);
+
+  const handleSeedAwakening = useCallback(() => {
+    if (seedActive) return;
+    setSeedActive(true);
+
+    seedTimersRef.current.forEach(clearTimeout);
+    seedTimersRef.current = [];
+
+    // Phase 1: Descend - SEED crystalline falls slowly (0~1200ms)
+    setSeedPhase('descend');
+
+    // Phase 2: Shatter - Cracks, explosion, flash, screen shake (1200ms)
+    seedTimersRef.current.push(setTimeout(() => {
+      setSeedPhase('shatter');
+    }, 1200));
+
+    // Phase 3: Awaken - Eye zoom, purple iris, energy waves, text (2200ms)
+    seedTimersRef.current.push(setTimeout(() => {
+      setSeedPhase('awaken');
+    }, 2200));
+
+    // Phase 4: Power - Purple aura sustained (3800ms)
+    seedTimersRef.current.push(setTimeout(() => {
+      setSeedPhase('power');
+    }, 3800));
+
+    // Phase 5: Settle - Fade out (4800ms)
+    seedTimersRef.current.push(setTimeout(() => {
+      setSeedPhase('settle');
+    }, 4800));
+
+    // Reset (5800ms)
+    seedTimersRef.current.push(setTimeout(() => {
+      setSeedPhase('idle');
+      setSeedActive(false);
+    }, 5800));
+  }, [seedActive]);
+
+  // Sync seedPhase to ref for use in animateParticles
+  useEffect(() => {
+    seedPhaseRef.current = seedPhase;
+  }, [seedPhase]);
+
+  // Cleanup seed timers on unmount
+  useEffect(() => {
+    return () => {
+      seedTimersRef.current.forEach(clearTimeout);
+    };
   }, []);
 
   // Boot sequence
@@ -88,6 +149,7 @@ export default function Home() {
             setTimeout(() => {
               setIsBooted(true);
               setIsVisible(true);
+              setTimeout(() => setBootAnimDone(true), 1100);
             }, 300);
           }
         }
@@ -231,8 +293,19 @@ export default function Home() {
               width: particle.size,
               height: particle.size,
               opacity: particle.opacity,
-              backgroundColor: particle.id % 5 === 0 ? '#e8b830' : '#1e90ff',
-              boxShadow: `0 0 ${particle.size * 3}px ${particle.id % 5 === 0 ? 'rgba(232,184,48,0.4)' : 'rgba(30,144,255,0.4)'}`,
+              backgroundColor: (seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power')
+                ? '#a855f7'
+                : seedPhase === 'settle'
+                  ? '#c084fc'
+                  : particle.id % 5 === 0 ? '#e8b830' : '#1e90ff',
+              boxShadow: `0 0 ${particle.size * ((seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power') ? 8 : seedPhase === 'settle' ? 5 : 3)}px ${
+                (seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power')
+                  ? 'rgba(168,85,247,0.8)'
+                  : seedPhase === 'settle'
+                    ? 'rgba(192,132,252,0.5)'
+                    : particle.id % 5 === 0 ? 'rgba(232,184,48,0.4)' : 'rgba(30,144,255,0.4)'
+              }`,
+              transition: 'background-color 0.5s, box-shadow 0.5s',
             }}
           />
         ))}
@@ -260,8 +333,319 @@ export default function Home() {
       {/* Scanline effect */}
       <div className="fixed inset-0 pointer-events-none z-20 scanline-overlay opacity-20" />
 
+      {/* ===== SEED Awakening Effect - Kira Yamato ===== */}
+      {seedPhase !== 'idle' && (
+        <>
+          {/* Purple veil - darkens screen with purple tint */}
+          {(seedPhase === 'descend' || seedPhase === 'shatter' || seedPhase === 'awaken') && (
+            <div
+              className="fixed inset-0 z-30 pointer-events-none"
+              style={{
+                background: 'linear-gradient(to bottom, rgba(30, 10, 60, 0.95), rgba(76, 29, 149, 0.85), rgba(30, 10, 60, 0.95))',
+                animation: 'screen-purple-veil 4s ease-in-out forwards',
+              }}
+            />
+          )}
+
+          {/* Cinematic vignette - dark edges, bright center focus */}
+          {(seedPhase === 'descend' || seedPhase === 'shatter') && (
+            <div className="fixed inset-0 z-[31] pointer-events-none"
+              style={{
+                background: 'radial-gradient(ellipse 50% 50% at center, transparent 0%, rgba(10, 5, 30, 0.7) 100%)',
+                animation: 'screen-purple-veil 3s ease-in-out forwards',
+              }}
+            />
+          )}
+
+          {/* Phase 1: Descend - Crystalline SEED falls */}
+          {seedPhase === 'descend' && (
+            <div className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center">
+              <div className="relative" style={{ animation: 'seed-descend 1200ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards' }}>
+                {/* Trailing glow particles behind the SEED */}
+                {[...Array(8)].map((_, i) => (
+                  <div key={`trail-${i}`} className="absolute left-1/2 -translate-x-1/2 rounded-full"
+                    style={{
+                      width: 4 + i * 2,
+                      height: 4 + i * 2,
+                      top: -(20 + i * 18),
+                      background: `radial-gradient(circle, rgba(233,213,255,${0.6 - i * 0.06}) 0%, rgba(168,85,247,${0.3 - i * 0.03}) 60%, transparent 100%)`,
+                      animation: `seed-inner-pulse ${600 + i * 100}ms ease-in-out infinite`,
+                      animationDelay: `${i * 80}ms`,
+                    }}
+                  />
+                ))}
+                {/* Vertical light trail beam */}
+                <div className="absolute left-1/2 -translate-x-1/2 w-[2px] -top-[120px]"
+                  style={{
+                    height: 100,
+                    background: 'linear-gradient(to bottom, transparent, rgba(168,85,247,0.4), rgba(233,213,255,0.2), transparent)',
+                    filter: 'blur(1px)',
+                  }}
+                />
+                <svg viewBox="0 0 100 160" className="w-24 h-36 md:w-32 md:h-48" style={{ filter: 'drop-shadow(0 0 20px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 40px rgba(168, 85, 247, 0.3))' }}>
+                  <defs>
+                    <radialGradient id="seedCrystal" cx="50%" cy="35%" r="65%">
+                      <stop offset="0%" stopColor="#f3e8ff" stopOpacity="0.95" />
+                      <stop offset="25%" stopColor="#c084fc" stopOpacity="0.9" />
+                      <stop offset="50%" stopColor="#a855f7" stopOpacity="0.8" />
+                      <stop offset="75%" stopColor="#7c3aed" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="#4c1d95" stopOpacity="0.3" />
+                    </radialGradient>
+                    <radialGradient id="seedCore" cx="50%" cy="40%" r="30%">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+                      <stop offset="100%" stopColor="#e9d5ff" stopOpacity="0" />
+                    </radialGradient>
+                  </defs>
+                  {/* Outer glow */}
+                  <ellipse cx="50" cy="70" rx="35" ry="55" fill="rgba(168, 85, 247, 0.15)" />
+                  {/* Main SEED crystal body - faceted diamond shape */}
+                  <path d="M50 8 L72 38 L68 85 L50 152 L32 85 L28 38 Z" fill="url(#seedCrystal)" />
+                  {/* Internal facet lines */}
+                  <path d="M50 8 L50 152" stroke="#e9d5ff" strokeWidth="0.5" opacity="0.6" />
+                  <path d="M28 38 L72 38" stroke="#e9d5ff" strokeWidth="0.4" opacity="0.5" />
+                  <path d="M32 85 L68 85" stroke="#e9d5ff" strokeWidth="0.4" opacity="0.5" />
+                  <path d="M50 8 L32 85" stroke="#c084fc" strokeWidth="0.3" opacity="0.4" />
+                  <path d="M50 8 L68 85" stroke="#c084fc" strokeWidth="0.3" opacity="0.4" />
+                  <path d="M50 152 L28 38" stroke="#c084fc" strokeWidth="0.3" opacity="0.3" />
+                  <path d="M50 152 L72 38" stroke="#c084fc" strokeWidth="0.3" opacity="0.3" />
+                  {/* Cross facets */}
+                  <path d="M28 38 L68 85" stroke="#d8b4fe" strokeWidth="0.2" opacity="0.3" />
+                  <path d="M72 38 L32 85" stroke="#d8b4fe" strokeWidth="0.2" opacity="0.3" />
+                  {/* Inner core glow */}
+                  <ellipse cx="50" cy="60" rx="14" ry="22" fill="url(#seedCore)" style={{ animation: 'seed-inner-pulse 800ms ease-in-out infinite' }} />
+                  {/* Highlight */}
+                  <ellipse cx="43" cy="35" rx="5" ry="10" fill="rgba(255,255,255,0.4)" transform="rotate(-15 43 35)" />
+                </svg>
+              </div>
+            </div>
+          )}
+
+          {/* Phase 2: Shatter - Starburst, explosion, fragments, flash, screen shake */}
+          {seedPhase === 'shatter' && (
+            <div className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center">
+              {/* Starburst ray field - primary layer (rendered first = behind everything) */}
+              <div className="absolute flex items-center justify-center" style={{ width: '250vmax', height: '250vmax' }}>
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  background: `
+                    repeating-conic-gradient(from 0deg, transparent 0deg, rgba(74,222,128,0.7) 0.9deg, transparent 1.8deg, transparent 5.5deg),
+                    repeating-conic-gradient(from 2.5deg, transparent 0deg, rgba(45,212,191,0.5) 0.7deg, transparent 1.4deg, transparent 6.5deg),
+                    repeating-conic-gradient(from 4deg, transparent 0deg, rgba(168,85,247,0.55) 0.7deg, transparent 1.4deg, transparent 7deg),
+                    repeating-conic-gradient(from 1.5deg, transparent 0deg, rgba(255,255,255,0.7) 0.5deg, transparent 1deg, transparent 8deg),
+                    repeating-conic-gradient(from 5.5deg, transparent 0deg, rgba(192,132,252,0.4) 0.6deg, transparent 1.2deg, transparent 9deg)
+                  `,
+                  WebkitMaskImage: 'radial-gradient(circle, white 0%, white 3%, white 25%, transparent 65%)',
+                  maskImage: 'radial-gradient(circle, white 0%, white 3%, white 25%, transparent 65%)',
+                  animation: 'starburst-expand 1200ms ease-out forwards',
+                  filter: 'blur(0.8px)',
+                }} />
+              </div>
+
+              {/* Starburst ray field - secondary layer (offset rotation for density) */}
+              <div className="absolute flex items-center justify-center" style={{ width: '220vmax', height: '220vmax' }}>
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  background: `
+                    repeating-conic-gradient(from 2deg, transparent 0deg, rgba(74,222,128,0.45) 0.6deg, transparent 1.2deg, transparent 7deg),
+                    repeating-conic-gradient(from 5deg, transparent 0deg, rgba(232,184,48,0.35) 0.5deg, transparent 1deg, transparent 9deg),
+                    repeating-conic-gradient(from 0.5deg, transparent 0deg, rgba(255,255,255,0.4) 0.4deg, transparent 0.8deg, transparent 10deg)
+                  `,
+                  WebkitMaskImage: 'radial-gradient(circle, white 0%, white 5%, white 20%, transparent 55%)',
+                  maskImage: 'radial-gradient(circle, white 0%, white 5%, white 20%, transparent 55%)',
+                  animation: 'starburst-expand 1100ms ease-out 50ms forwards',
+                  filter: 'blur(1.2px)',
+                  opacity: 0,
+                }} />
+              </div>
+
+              {/* Exploding SEED core */}
+              <div className="absolute" style={{ animation: 'seed-explode-core 800ms ease-out forwards' }}>
+                <svg viewBox="0 0 100 160" className="w-24 h-36 md:w-32 md:h-48">
+                  <defs>
+                    <radialGradient id="seedExplode" cx="50%" cy="40%" r="50%">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                      <stop offset="40%" stopColor="#e9d5ff" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                    </radialGradient>
+                  </defs>
+                  {/* Crack lines appearing */}
+                  <path d="M50 30 L42 50 L33 68 L26 85" stroke="#fff" strokeWidth="2" fill="none"
+                    strokeDasharray="80" style={{ animation: 'seed-crack-draw 300ms ease-out forwards' }} />
+                  <path d="M50 30 L58 48 L67 65 L74 82" stroke="#fff" strokeWidth="2" fill="none"
+                    strokeDasharray="80" style={{ animation: 'seed-crack-draw 300ms ease-out 50ms forwards' }} />
+                  <path d="M38 42 L50 50 L62 45" stroke="#e9d5ff" strokeWidth="1.5" fill="none"
+                    strokeDasharray="40" style={{ animation: 'seed-crack-draw 250ms ease-out 100ms forwards' }} />
+                  <path d="M35 70 L50 80 L65 72" stroke="#e9d5ff" strokeWidth="1.5" fill="none"
+                    strokeDasharray="40" style={{ animation: 'seed-crack-draw 250ms ease-out 150ms forwards' }} />
+                  {/* Glowing core */}
+                  <ellipse cx="50" cy="60" rx="25" ry="40" fill="url(#seedExplode)" />
+                </svg>
+              </div>
+
+              {/* Crystal fragments flying outward (on top of rays) */}
+              {[...Array(20)].map((_, i) => {
+                const angle = (i / 20) * Math.PI * 2 + (i % 3) * 0.2;
+                const dist = 200 + (i % 4) * 100;
+                const fragColors = ['#f3e8ff,#a855f7,#7c3aed', '#d1fae5,#4ade80,#059669', '#e0e7ff,#a5b4fc,#6366f1', '#fef3c7,#fbbf24,#d97706', '#f3e8ff,#c084fc,#7c3aed'];
+                return (
+                  <div
+                    key={`frag-${i}`}
+                    className="absolute"
+                    style={{
+                      width: 3 + (i % 5) * 3,
+                      height: (4 + (i % 5) * 4) * 1.5,
+                      background: `linear-gradient(${(i * 47) % 360}deg, ${fragColors[i % fragColors.length]})`,
+                      clipPath: 'polygon(50% 0%, 0% 100%, 100% 80%)',
+                      animation: `fragment-fly ${600 + (i % 4) * 150}ms ease-out ${(i % 7) * 30}ms forwards`,
+                      '--fx': `${Math.cos(angle) * dist}px`,
+                      '--fy': `${Math.sin(angle) * dist}px`,
+                      '--fr': `${(i % 2 === 0 ? 1 : -1) * (360 + (i % 5) * 180)}deg`,
+                    } as React.CSSProperties}
+                  />
+                );
+              })}
+
+              {/* Warm amber halo around core */}
+              <div className="absolute rounded-full" style={{
+                width: '30vmin',
+                height: '30vmin',
+                background: 'radial-gradient(circle, rgba(255,230,150,0.5) 0%, rgba(232,184,48,0.3) 30%, rgba(255,200,100,0.1) 60%, transparent 100%)',
+                filter: 'blur(10px)',
+                animation: 'core-glow-sustain 1200ms ease-out forwards',
+              }} />
+
+              {/* Super bright core glow - sustained brightness */}
+              <div className="absolute rounded-full" style={{
+                width: '50vmin',
+                height: '50vmin',
+                background: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 12%, rgba(233,213,255,0.6) 30%, rgba(168,85,247,0.25) 50%, transparent 100%)',
+                filter: 'blur(6px)',
+                animation: 'core-glow-sustain 1200ms ease-out forwards',
+              }} />
+
+              {/* Horizontal cinematic flash lines */}
+              <div className="absolute w-[200vw] h-[2px] left-[-50vw]"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.8) 30%, rgba(255,255,255,0.9) 50%, rgba(168,85,247,0.8) 70%, transparent 100%)',
+                  animation: 'horizontal-flash-line 600ms ease-out forwards',
+                }} />
+              <div className="absolute w-[200vw] h-[1px] left-[-50vw] top-[calc(50%-20px)]"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(192,132,252,0.5) 40%, rgba(192,132,252,0.5) 60%, transparent 100%)',
+                  animation: 'horizontal-flash-line 500ms ease-out 100ms forwards',
+                }} />
+              <div className="absolute w-[200vw] h-[1px] left-[-50vw] top-[calc(50%+20px)]"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(192,132,252,0.5) 40%, rgba(192,132,252,0.5) 60%, transparent 100%)',
+                  animation: 'horizontal-flash-line 500ms ease-out 100ms forwards',
+                }} />
+
+              {/* Blinding white-purple flash */}
+              <div className="fixed inset-0 z-10"
+                style={{
+                  background: 'radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(233,213,255,0.9) 30%, rgba(168,85,247,0.6) 60%, rgba(76,29,149,0.3) 100%)',
+                  animation: 'white-purple-flash 1000ms ease-out forwards',
+                }} />
+
+              {/* Screen edge impact flash - purple border glow */}
+              <div className="fixed inset-0 z-10 pointer-events-none"
+                style={{
+                  boxShadow: 'inset 0 0 80px rgba(168,85,247,0.8), inset 0 0 160px rgba(124,58,237,0.4), inset 0 0 240px rgba(76,29,149,0.2)',
+                  animation: 'white-purple-flash 800ms ease-out forwards',
+                }} />
+            </div>
+          )}
+
+          {/* Phase 3: Awaken - Starburst afterglow + Energy shockwaves + SEED text */}
+          {seedPhase === 'awaken' && (
+            <div className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center">
+              {/* Starburst afterglow - fading rays from shatter */}
+              <div className="absolute flex items-center justify-center" style={{ width: '200vmax', height: '200vmax' }}>
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  background: `
+                    repeating-conic-gradient(from 6deg, transparent 0deg, rgba(168,85,247,0.3) 0.6deg, transparent 1.2deg, transparent 8deg),
+                    repeating-conic-gradient(from 2deg, transparent 0deg, rgba(255,255,255,0.2) 0.4deg, transparent 0.8deg, transparent 10deg)
+                  `,
+                  WebkitMaskImage: 'radial-gradient(circle, transparent 3%, white 8%, white 20%, transparent 55%)',
+                  maskImage: 'radial-gradient(circle, transparent 3%, white 8%, white 20%, transparent 55%)',
+                  animation: 'starburst-sustain 1.5s ease-out forwards',
+                  filter: 'blur(1px)',
+                }} />
+              </div>
+
+              {/* Multiple energy shockwaves */}
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={`wave-${i}`}
+                  className="absolute w-32 h-32 rounded-full"
+                  style={{
+                    border: `${2 - i * 0.2}px solid rgba(168, 85, 247, ${0.7 - i * 0.08})`,
+                    animation: `energy-shockwave ${1200 + i * 100}ms ease-out ${i * 200}ms forwards`,
+                    opacity: 0,
+                  }}
+                />
+              ))}
+
+              {/* Purple atmospheric glow */}
+              <div className="absolute w-[80vw] h-[80vh] rounded-full"
+                style={{
+                  background: 'radial-gradient(ellipse, rgba(168,85,247,0.15) 0%, rgba(124,58,237,0.05) 50%, transparent 70%)',
+                  animation: 'purple-afterglow 1.5s ease-out forwards',
+                }} />
+
+              {/* SEED text */}
+              <div className="absolute z-50" style={{ animation: 'seed-text-reveal 1.5s ease-in-out forwards' }}>
+                <p className="font-mono text-lg md:text-2xl font-black tracking-[0.3em]"
+                  style={{
+                    color: '#e9d5ff',
+                    textShadow: '0 0 20px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4), 0 0 80px rgba(124,58,237,0.3), 0 0 120px rgba(76,29,149,0.2)',
+                  }}>
+                  S E E D
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Phase 4: Power - Sustained pulsing purple aura */}
+          {seedPhase === 'power' && (
+            <div className="fixed inset-0 z-30 pointer-events-none flex items-center justify-center">
+              {/* Pulsing atmospheric purple */}
+              <div className="absolute w-[70vw] h-[70vh] rounded-full"
+                style={{
+                  background: 'radial-gradient(ellipse, rgba(168,85,247,0.12) 0%, rgba(124,58,237,0.04) 50%, transparent 70%)',
+                  animation: 'purple-afterglow 1s ease-out forwards',
+                }} />
+              {/* Slow-expanding secondary ring */}
+              <div className="absolute w-40 h-40 rounded-full border border-[#a855f7]/20"
+                style={{ animation: 'energy-shockwave 1.5s ease-out forwards', opacity: 0 }} />
+            </div>
+          )}
+
+          {/* Phase 5: Settle */}
+          {seedPhase === 'settle' && (
+            <div className="fixed inset-0 z-30 pointer-events-none flex items-center justify-center">
+              <div className="absolute w-96 h-96 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)',
+                  animation: 'purple-afterglow 1s ease-out forwards',
+                }} />
+            </div>
+          )}
+        </>
+      )}
+
       <div className={`flex flex-col gap-24 py-8 md:py-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 transition-all duration-1000 ${isBooted ? 'opacity-100' : 'opacity-0'}`}
-        style={isBooted ? { animation: 'cockpit-boot 1s ease-out' } : {}}
+        style={
+          seedPhase === 'shatter'
+            ? { animation: 'screen-shake 800ms ease-out' }
+            : isBooted && !bootAnimDone
+              ? { animation: 'cockpit-boot 1s ease-out' }
+              : {}
+        }
       >
         {/* Hero Section */}
         <section
@@ -276,39 +660,91 @@ export default function Home() {
             }`}
           >
             {/* Target lock frame */}
-            <div className="absolute -inset-6">
-              <svg viewBox="0 0 200 200" className="w-full h-full" style={{ animation: 'rotate 20s linear infinite' }}>
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#1e90ff" strokeWidth="0.3" opacity="0.3" strokeDasharray="10 5" />
+            <div className="absolute -inset-6 transition-all duration-500">
+              <svg viewBox="0 0 200 200" className="w-full h-full" style={{
+                animation: `rotate ${seedPhase === 'shatter' || seedPhase === 'awaken' ? '2s' : seedPhase === 'power' ? '4s' : '20s'} linear infinite`,
+              }}>
+                <circle cx="100" cy="100" r="90" fill="none"
+                  stroke={seedPhase !== 'idle' && seedPhase !== 'settle' ? '#a855f7' : '#1e90ff'}
+                  strokeWidth={seedPhase === 'shatter' || seedPhase === 'awaken' ? '0.8' : '0.3'}
+                  opacity={seedPhase === 'shatter' || seedPhase === 'awaken' ? '0.7' : seedPhase === 'power' ? '0.5' : '0.3'}
+                  strokeDasharray="10 5" />
               </svg>
             </div>
-            <div className="absolute -inset-4">
-              <svg viewBox="0 0 180 180" className="w-full h-full" style={{ animation: 'rotate 15s linear infinite reverse' }}>
-                <circle cx="90" cy="90" r="80" fill="none" stroke="#e8b830" strokeWidth="0.3" opacity="0.2" strokeDasharray="5 10" />
+            <div className="absolute -inset-4 transition-all duration-500">
+              <svg viewBox="0 0 180 180" className="w-full h-full" style={{
+                animation: `rotate ${seedPhase === 'shatter' || seedPhase === 'awaken' ? '1.5s' : seedPhase === 'power' ? '3s' : '15s'} linear infinite reverse`,
+              }}>
+                <circle cx="90" cy="90" r="80" fill="none"
+                  stroke={seedPhase !== 'idle' && seedPhase !== 'settle' ? '#c084fc' : '#e8b830'}
+                  strokeWidth={seedPhase === 'shatter' || seedPhase === 'awaken' ? '0.8' : '0.3'}
+                  opacity={seedPhase === 'shatter' || seedPhase === 'awaken' ? '0.6' : seedPhase === 'power' ? '0.4' : '0.2'}
+                  strokeDasharray="5 10" />
               </svg>
             </div>
 
             {/* HUD corner brackets */}
             <div className="absolute -inset-3 pointer-events-none">
-              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#1e90ff]/50" />
-              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#1e90ff]/50" />
-              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#1e90ff]/50" />
-              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#1e90ff]/50" />
+              {(['top-0 left-0 border-t-2 border-l-2', 'top-0 right-0 border-t-2 border-r-2', 'bottom-0 left-0 border-b-2 border-l-2', 'bottom-0 right-0 border-b-2 border-r-2'] as const).map((pos, i) => (
+                <div key={i} className={`absolute w-4 h-4 ${pos} transition-colors duration-500 ${
+                  seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power'
+                    ? 'border-[#a855f7]/80' : 'border-[#1e90ff]/50'
+                }`} />
+              ))}
             </div>
 
-            <div className="relative h-36 w-36 overflow-hidden rounded-full border border-[#1e90ff]/30"
+            <div
+              className="relative h-36 w-36 overflow-hidden rounded-full border cursor-pointer active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a855f7]/60"
+              role="button"
+              tabIndex={0}
+              aria-label="SEED覚醒エフェクトを発動"
+              onClick={handleSeedAwakening}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSeedAwakening(); } }}
               style={{
-                boxShadow: '0 0 30px rgba(30, 144, 255, 0.2), inset 0 0 20px rgba(30, 144, 255, 0.1)',
-                animation: 'float 6s ease-in-out infinite'
+                borderColor: (seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power')
+                  ? 'rgba(168, 85, 247, 0.7)'
+                  : seedPhase === 'settle'
+                    ? 'rgba(168, 85, 247, 0.25)'
+                    : 'rgba(30, 144, 255, 0.3)',
+                boxShadow: (seedPhase === 'awaken' || seedPhase === 'power')
+                  ? undefined
+                  : seedPhase === 'settle'
+                    ? '0 0 40px rgba(168, 85, 247, 0.15)'
+                    : '0 0 30px rgba(30, 144, 255, 0.2), inset 0 0 20px rgba(30, 144, 255, 0.1)',
+                animation: (seedPhase === 'awaken' || seedPhase === 'power')
+                  ? 'avatar-purple-aura 2s ease-out forwards'
+                  : seedPhase === 'shatter'
+                    ? 'avatar-seed-zoom 1s ease-out forwards'
+                    : 'float 6s ease-in-out infinite',
+                transition: 'border-color 0.5s, box-shadow 0.5s',
               }}
             >
               <img src="/images/yutaicon.JPG" alt="Profile" className="w-full h-full object-cover" />
-              {/* HUD overlay on image */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#1e90ff]/5 to-transparent" />
+              {/* Purple iris overlay during awakening */}
+              <div className={`absolute inset-0 transition-all duration-500 ${
+                seedPhase === 'shatter' || seedPhase === 'awaken'
+                  ? 'bg-[#a855f7]/25'
+                  : seedPhase === 'power'
+                    ? 'bg-[#a855f7]/10'
+                    : 'bg-gradient-to-b from-[#1e90ff]/5 to-transparent'
+              }`} style={
+                (seedPhase === 'awaken') ? { animation: 'iris-purple-overlay 1.5s ease-out forwards' } : {}
+              } />
             </div>
 
             {/* Status label */}
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[#0a0f1e]/80 border border-[#1e90ff]/20 rounded-sm">
-              <span className="font-mono text-[10px] text-[#1e90ff]/60 tracking-widest">PILOT VERIFIED</span>
+            <div className={`absolute -bottom-6 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[#0a0f1e]/80 border rounded-sm transition-all duration-500 ${
+              seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power'
+                ? 'border-[#a855f7]/50'
+                : 'border-[#1e90ff]/20'
+            }`}>
+              <span className={`font-mono text-[10px] tracking-widest transition-colors duration-500 ${
+                seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power'
+                  ? 'text-[#c084fc]'
+                  : 'text-[#1e90ff]/60'
+              }`}>
+                {seedPhase === 'shatter' || seedPhase === 'awaken' || seedPhase === 'power' ? 'SEED MODE' : 'PILOT VERIFIED'}
+              </span>
             </div>
           </div>
 
